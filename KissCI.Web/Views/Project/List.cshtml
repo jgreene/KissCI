@@ -1,0 +1,14 @@
+﻿@model IEnumerable<KissCI.Project>
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List</h2>
+
+@{ foreach(var project in this.Model){
+       <div>@project.Name</div>
+    }
+}
+

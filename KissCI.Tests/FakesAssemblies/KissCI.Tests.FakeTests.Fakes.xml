@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KissCI.Tests.FakeTests.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1">
+            <summary>Shim type of KissCI.Tests.FakeTests.UnitTest1</summary>
+        </member>
+        <member name="M:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.#ctor(KissCI.Tests.FakeTests.UnitTest1)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.Constructor">
+            <summary>Sets the shim of UnitTest1.UnitTest1()</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.TestMethod1">
+            <summary>Sets the shim of UnitTest1.TestMethod1()</summary>
+        </member>
+        <member name="T:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.ShimUnitTest1.AllInstances.TestMethod1">
+            <summary>Sets the shim of UnitTest1.TestMethod1()</summary>
+        </member>
+        <member name="T:KissCI.Tests.FakeTests.Fakes.StubUnitTest1">
+            <summary>Stub type of KissCI.Tests.FakeTests.UnitTest1</summary>
+        </member>
+        <member name="M:KissCI.Tests.FakeTests.Fakes.StubUnitTest1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:KissCI.Tests.FakeTests.Fakes.StubUnitTest1.InitializeStub">
+            <summary>Initializes a new instance of type StubUnitTest1</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.StubUnitTest1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.StubUnitTest1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:KissCI.Tests.FakeTests.Fakes.StubUnitTest1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+    </members>
+</doc>
