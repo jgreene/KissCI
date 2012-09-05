@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using KissCI.NHibernate;
+using KissCI.NHibernate.Internal;
 
 namespace KissCI.Tests.Domain
 {
@@ -21,28 +22,38 @@ namespace KissCI.Tests.Domain
             var outputDirectory = Path.Combine(executableDirectory.FullName, "MessageService");
 
             DirectoryHelper.CleanAndEnsureDirectory(outputDirectory);
-
+            SessionManager.InitDb();
 
 
             using (var dataProvider = new NHibernateDataContext())
             {
                 var service = dataProvider.TaskMessageService;
 
-                var message = new TaskMessage
+                var message1 = new TaskMessage
                 {
                     Time = TimeHelper.Now,
+                    BuildId = 0,
                     Message = "This is a test message"
                 };
 
-                service.WriteMessage(message);
-                service.WriteMessage(message);
+                var message2 = new TaskMessage
+                {
+                    Time = TimeHelper.Now,
+                    BuildId = 0,
+                    Message = "This is a test message"
+                };
+
+                service.WriteMessage(message1);
+                service.WriteMessage(message2);
 
                 var messages = service.GetMessages();
 
-                Assert.IsTrue(messages.Count() == 2);
+                var count = messages.Count();
+
+                Assert.IsTrue(count == 2);
 
                 var read = messages.First();
-                Assert.AreEqual(message.Message, read.Message);
+                Assert.AreEqual(message1.Message, read.Message);
 
             }
 

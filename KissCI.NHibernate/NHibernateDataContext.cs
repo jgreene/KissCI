@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace KissCI.NHibernate
 {
@@ -14,7 +15,7 @@ namespace KissCI.NHibernate
     {
         public NHibernateDataContext()
         {
-            _session = null;
+            _session = SessionManager.GetSession();
         }
 
         readonly ISession _session;
@@ -34,9 +35,20 @@ namespace KissCI.NHibernate
             get { return new ProjectInfoService(_session); }
         }
 
+        public void Commit()
+        {
+            if (_session.Transaction.IsActive
+                && _session.Transaction.WasRolledBack == false
+                && _session.IsConnected
+                && _session.IsOpen
+                )
+            {
+                _session.Transaction.Commit();
+            }
+        }
+
         public void Dispose()
         {
-            _session.Flush();
             _session.Dispose();
         }
     }

@@ -10,6 +10,7 @@ using KissCI.Tasks;
 using KissCI.Helpers;
 using KissCI.Internal;
 using System.Threading;
+using KissCI.NHibernate.Internal;
 
 namespace KissCI.Tests.Domain
 {
@@ -97,6 +98,28 @@ namespace KissCI.Tests.Domain
 
                 Assert.IsTrue(service.CancelProject(project));
                 
+            }
+        }
+
+        [TestMethod]
+        public void CanSaveProjectInfo()
+        {
+            SessionManager.InitDb();
+            using (var ctx = new KissCI.NHibernate.NHibernateDataContext())
+            {
+                
+                var srv = ctx.ProjectInfoService;
+
+                var info = new ProjectInfo
+                {
+                    ProjectName = "Test",
+                    Activity = Activity.Sleeping,
+                    Status = Status.Running
+                };
+
+                srv.Save(info);
+
+                Assert.IsTrue(info.Id > 0);
             }
         }
     }

@@ -30,34 +30,34 @@ namespace KissCI.Internal.Domain
 
     public class TaskMessage
     {
-        public long Id { get; set; }
-        public long BuildId { get; set; }
-        public DateTime Time { get; set; }
-        public string Message { get; set; }
+        public virtual long Id { get; set; }
+        public virtual long BuildId { get; set; }
+        public virtual DateTime Time { get; set; }
+        public virtual string Message { get; set; }
     }
 
     public class ProjectBuild
     {
-        public long Id { get; set; }
-        public long ProjectInfoId { get; set; }
-        public DateTime BuildTime { get; set; }
-        public DateTime CompleteTime { get; set; }
-        public Nullable<BuildResult> BuildResult { get; set; }
-        public Lazy<Stream> BuildLog { get; set; }
+        public virtual long Id { get; set; }
+        public virtual long ProjectInfoId { get; set; }
+        public virtual DateTime BuildTime { get; set; }
+        public virtual DateTime CompleteTime { get; set; }
+        public virtual Nullable<BuildResult> BuildResult { get; set; }
+        public virtual Lazy<Stream> BuildLog { get; set; }
     }
 
     public class ProjectInfo
     {
-        public long Id { get; set; }
-        public string ProjectName { get; set; }
-        public Status Status { get; set; }
-        public Activity Activity { get; set; }
+        public virtual long Id { get; set; }
+        public virtual string ProjectName { get; set; }
+        public virtual Status Status { get; set; }
+        public virtual Activity Activity { get; set; }
 
         #region calculated
-        public Nullable<BuildResult> LastBuildResult { get; set; }
-        public Nullable<DateTime> LastBuildTime { get; set; }
-        public Nullable<DateTime> NextBuildTime { get; set; }
-        public string LastMessage { get; set; }
+        public virtual Nullable<BuildResult> LastBuildResult { get; set; }
+        public virtual Nullable<DateTime> LastBuildTime { get; set; }
+        public virtual Nullable<DateTime> NextBuildTime { get; set; }
+        public virtual string LastMessage { get; set; }
         #endregion
     }
 }
