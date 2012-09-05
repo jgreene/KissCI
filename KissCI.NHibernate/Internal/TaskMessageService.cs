@@ -30,7 +30,7 @@ namespace KissCI.NHibernate.Internal
 
         public IQueryable<TaskMessage> GetMessagesForBuild(int buildId)
         {
-            return GetMessages().Where(tm => tm.BuildId == buildId);
+            return GetMessages().Where(tm => tm.ProjectBuildId == buildId);
         }
     }
 }

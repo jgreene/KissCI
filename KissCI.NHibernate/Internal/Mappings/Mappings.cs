@@ -27,7 +27,8 @@ namespace KissCI.NHibernate.Internal.Mappings
             Map(x => x.ProjectInfoId);
             Map(x => x.BuildTime);
             Map(x => x.CompleteTime);
-            Map(x => x.BuildResult);            
+            Map(x => x.BuildResult);
+            Map(x => x.LogFile);
         }
     }
 
@@ -36,7 +37,8 @@ namespace KissCI.NHibernate.Internal.Mappings
         public TaskMessageMap()
         {
             Id(x => x.Id);
-            Map(x => x.BuildId);
+            Map(x => x.ProjectInfoId);
+            Map(x => x.ProjectBuildId);
             Map(x => x.Time);
             Map(x => x.Message);   
         }

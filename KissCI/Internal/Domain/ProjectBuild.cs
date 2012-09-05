@@ -31,7 +31,8 @@ namespace KissCI.Internal.Domain
     public class TaskMessage
     {
         public virtual long Id { get; set; }
-        public virtual long BuildId { get; set; }
+        public virtual long ProjectBuildId { get; set; }
+        public virtual long ProjectInfoId { get; set; }
         public virtual DateTime Time { get; set; }
         public virtual string Message { get; set; }
     }
@@ -43,7 +44,15 @@ namespace KissCI.Internal.Domain
         public virtual DateTime BuildTime { get; set; }
         public virtual DateTime CompleteTime { get; set; }
         public virtual Nullable<BuildResult> BuildResult { get; set; }
-        public virtual Lazy<Stream> BuildLog { get; set; }
+        public virtual string LogFile { get; set; }
+        public virtual Lazy<FileStream> BuildLog
+        {
+            get
+            {
+                var logFile = this.LogFile;
+                return new Lazy<FileStream>(() => File.Open(logFile, FileMode.OpenOrCreate));
+            }
+        }
     }
 
     public class ProjectInfo
@@ -52,12 +61,15 @@ namespace KissCI.Internal.Domain
         public virtual string ProjectName { get; set; }
         public virtual Status Status { get; set; }
         public virtual Activity Activity { get; set; }
+    }
 
-        #region calculated
-        public virtual Nullable<BuildResult> LastBuildResult { get; set; }
-        public virtual Nullable<DateTime> LastBuildTime { get; set; }
+    public class ProjectView
+    {
+        public ProjectInfo Info { get; set; }
+
+        public ProjectBuild LastBuild { get; set; }
+        public TaskMessage LastMessage { get; set; }
+
         public virtual Nullable<DateTime> NextBuildTime { get; set; }
-        public virtual string LastMessage { get; set; }
-        #endregion
     }
 }

@@ -23,7 +23,7 @@ namespace KissCI.Web.Controllers
 
         public ActionResult List(string category)
         {
-            IEnumerable<Project> projects = ProjectService.GetProjects();
+            var projects = ProjectService.GetProjectViews();
 
             return View("List", projects);
         }

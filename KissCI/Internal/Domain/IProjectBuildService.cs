@@ -7,7 +7,9 @@ namespace KissCI.Internal.Domain
 {
     public interface IProjectBuildService
     {
-        IQueryable<ProjectBuild> GetBuilds(string projectName);
+        IQueryable<ProjectBuild> GetBuilds();
+        IQueryable<ProjectBuild> GetBuildsForProject(string projectName);
         ProjectBuild GetMostRecentBuild(string projectName);
+        void Save(ProjectBuild build);
     }
 }

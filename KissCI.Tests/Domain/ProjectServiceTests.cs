@@ -17,50 +17,12 @@ namespace KissCI.Tests.Domain
     [TestClass]
     public class ProjectServiceTests
     {
-        IProjectService GetService()
-        {
-            var executableDirectory = DirectoryHelper.CurrentDirectory();
-            var outputDirectory = Path.Combine(executableDirectory.FullName, "ServiceTests");
-
-            var copyTo = Path.Combine(outputDirectory, "Projects");
-            DirectoryHelper.EnsureDirectory(copyTo);
-            
-            var projectsDirectory = Path.Combine(executableDirectory.Parent.Parent.Parent.FullName, "KissCI.Projects");
-            var projectFile = Path.Combine(projectsDirectory, "KissCI.Projects.csproj");
-
-            var tasks = TaskHelper.Start()
-            .CreateTempDirectory(outputDirectory)
-            .AddStep((ctx, arg) =>
-            {
-                return new MsBuildArgs(projectFile, arg.Path, "Debug");
-            })
-            .MsBuild4_0()
-            .AddTask("Copy assembly", (ctx, arg) =>
-            {
-                try
-                {
-                    File.Copy(Path.Combine(arg.OutputPath, "KissCI.Projects.dll"), Path.Combine(copyTo, "KissCI.Projects.dll"), true);
-                }
-                catch { }
-                return true;
-            })
-            .Finalize();
-
-            var project = new Project("Test", "UI", tasks);
-
-            ProjectHelper.Run(project);
-
-            return new ProjectService(
-                outputDirectory, 
-                new MainProjectFactory(copyTo),
-                () => new KissCI.NHibernate.NHibernateDataContext()
-            );
-        }
+        
 
         [TestMethod]
         public void CanGetProjects()
         {
-            using (var service = GetService())
+            using (var service = ServiceHelper.GetService())
             {
                 Assert.IsTrue(service.GetProjects().Any());
             }
@@ -75,7 +37,7 @@ namespace KissCI.Tests.Domain
             DirectoryHelper.CleanAndEnsureDirectory(writeTo);
             var file = Path.Combine(writeTo, "test.txt");
 
-            using (var service = GetService())
+            using (var service = ServiceHelper.GetService())
             {
                 var project = service.RunProject("WriteFileProject");
 
@@ -89,7 +51,7 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanCancelProject()
         {
-            using (var service = GetService())
+            using (var service = ServiceHelper.GetService())
             {
                 var project = "SleepProject";
                 service.RunProject(project);
@@ -102,24 +64,62 @@ namespace KissCI.Tests.Domain
         }
 
         [TestMethod]
-        public void CanSaveProjectInfo()
+        public void CanGetProjectViews()
         {
             SessionManager.InitDb();
-            using (var ctx = new KissCI.NHibernate.NHibernateDataContext())
-            {
-                
-                var srv = ctx.ProjectInfoService;
 
-                var info = new ProjectInfo
+            using(var provider = new KissCI.NHibernate.NHibernateDataContext()){
+                var projectInfo = new ProjectInfo
                 {
-                    ProjectName = "Test",
-                    Activity = Activity.Sleeping,
-                    Status = Status.Running
+                    ProjectName = "Project1",
+                    Status = Status.Running,
+                    Activity = Activity.Building
                 };
 
-                srv.Save(info);
+                provider.ProjectInfoService.Save(projectInfo);
 
-                Assert.IsTrue(info.Id > 0);
+                var projectBuild = new ProjectBuild
+                {
+                    ProjectInfoId = projectInfo.Id,
+                    BuildTime = TimeHelper.Now,
+                    LogFile = "build.txt"
+                };
+
+                provider.ProjectBuildService.Save(projectBuild);
+
+                var message = new TaskMessage
+                {
+                    ProjectInfoId = projectInfo.Id,
+                    ProjectBuildId = projectBuild.Id,
+                    Time = TimeHelper.Now,
+                    Message = "This is a task message"
+                };
+
+                provider.TaskMessageService.WriteMessage(message);
+
+                provider.Commit();
+            }
+
+            using (var service = ServiceHelper.GetService())
+            {
+                var views = service.GetProjectViews();
+
+                Assert.IsTrue(views.Count() > 0);
+            }
+        }
+
+        [TestMethod]
+        public void ProjectInfoExistsPerTask()
+        {
+            SessionManager.InitDb();
+
+            using (var service = ServiceHelper.GetService())
+            {
+                var projects = service.GetProjects();
+                var views = service.GetProjectViews();
+
+
+                Assert.IsTrue(projects.Count == views.Count());
             }
         }
     }

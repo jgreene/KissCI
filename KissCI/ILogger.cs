@@ -1,6 +1,8 @@
 ﻿using KissCI.Helpers;
+using KissCI.Internal.Domain;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,18 +25,28 @@ namespace KissCI
             }
         }
 
-        public class FileLogger : ILogger
+        public class BuildLogger : ILogger, IDisposable
         {
-            public FileLogger(string directory)
+            public BuildLogger(ProjectBuild build)
             {
-                _directory = directory;
+                _build = build;
+                _fileStream = _build.BuildLog.Value;
+                _writer = new StreamWriter(_fileStream);
             }
 
-            string _directory;
+            readonly ProjectBuild _build;
+            readonly FileStream _fileStream;
+            readonly StreamWriter _writer;
 
             public void Log(string format, params object[] parameters)
             {
-                throw new NotImplementedException();
+                _writer.WriteLine(string.Format(format, parameters));
+            }
+
+            public void Dispose()
+            {
+                _fileStream.Dispose();
+                _writer.Dispose();
             }
         }
     }

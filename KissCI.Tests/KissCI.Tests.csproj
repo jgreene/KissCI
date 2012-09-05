@@ -37,9 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Dapper.1.10\lib\net40\Dapper.dll</HintPath>
+    <Reference Include="HibernatingRhinos.Profiler.Appender.v4.0">
+      <HintPath>..\..\..\Users\nephesh\Downloads\NHibernate.Profiler-Build-951\HibernatingRhinos.Profiler.Appender.v4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -64,11 +63,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DataProviders\SqliteDataProviderTests.cs" />
-    <Compile Include="Domain\MessageServiceTests.cs" />
+    <Compile Include="DataProviders\NHibernateDataContextTests.cs" />
     <Compile Include="Domain\ProjectServiceTests.cs" />
-    <Compile Include="Helpers\ConnectionHelper.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
+    <Compile Include="Helpers\ServiceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\MsBuildTests.cs" />
     <Compile Include="Tasks\MsTestTests.cs" />

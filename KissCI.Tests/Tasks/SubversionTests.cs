@@ -26,11 +26,16 @@ namespace KissCI.Tests.Tasks
 
             var project = new Project("TestProject", "UI", tasks);
 
-            ProjectHelper.Run(project);
+            using (var projectService = ServiceHelper.GetService())
+            {
+                ProjectHelper.Run(project, projectService);
 
-            var output = new DirectoryInfo(outputDirectory);
+                var output = new DirectoryInfo(outputDirectory);
 
-            Assert.IsTrue(output.EnumerateFiles().Any());
+                Assert.IsTrue(output.EnumerateFiles().Any());
+            }
+
+            
         }
     }
 }

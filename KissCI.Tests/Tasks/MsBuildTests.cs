@@ -33,7 +33,11 @@ namespace KissCI.Tests.Tasks
 
             var project = new Project("TestProject", "UI", tasks);
 
-            ProjectHelper.Run(project);
+            using (var projectService = ServiceHelper.GetService())
+            {
+                projectService.RegisterProject(project);
+                ProjectHelper.Run(project, projectService);
+            }
 
             var output = new DirectoryInfo(outputDirectory);
 

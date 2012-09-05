@@ -1,4 +1,7 @@
-﻿using System;
+﻿using KissCI.Helpers;
+using KissCI.Internal;
+using KissCI.Internal.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,23 +14,51 @@ namespace KissCI
 
     public class TaskContext
     {
-        public TaskContext(ILogger logger, string projectName, int taskCount)
+        public TaskContext(
+            IProjectService projectService, 
+            ProjectInfo info, 
+            ProjectBuild build,
+            ILogger logger, 
+            int taskCount)
         {
+            if (projectService == null)
+                throw new NullReferenceException("project service was null");
+            if (info == null)
+                throw new NullReferenceException("project info was null");
+            if (build == null)
+                throw new NullReferenceException("build was null");
             if (logger == null)
                 throw new NullReferenceException("Logger was null");
 
             _logger = logger;
-            _projectName = projectName;
             _taskCount = taskCount;
+            _projectService = projectService;
+            _info = info;
+            _build = build;
         }
 
-        ILogger _logger;
-        string _projectName;
-        int _taskCount;
+        readonly ILogger _logger;
+        readonly int _taskCount;
+        readonly ProjectInfo _info;
+        readonly ProjectBuild _build;
+        readonly IProjectService _projectService;
 
         public ILogger Logger { get { return _logger; } }
-        public string ProjectName { get { return _projectName; } }
+        public string ProjectName { get { return _info.ProjectName; } }
         public int TaskCount { get { return _taskCount; } }
+
+        public void LogMessage(string format, params object[] parameters)
+        {
+            using (var ctx = _projectService.OpenContext())
+            {
+                ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
+                {
+                    Time = TimeHelper.Now,
+                    Message = string.Format(format, parameters),
+                });
+                ctx.Commit();
+            }
+        }
         
         public void Log(string format, params object[] parameters)
         {

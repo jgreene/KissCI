@@ -14,12 +14,16 @@ namespace KissCI.Internal.Domain
 {
     public interface IProjectService : IDisposable
     {
-        IEnumerable<Project> GetProjects();
+        IList<Project> GetProjects();
+        IEnumerable<ProjectView> GetProjectViews();
         IEnumerable<ProjectBuild> GetBuilds(string projectName);
         ProjectBuild GetMostRecentBuild(string projectName);
         ProjectInfo GetProjectInfo(string projectName);
         bool RunProject(string projectName);
         bool CancelProject(string projectName);
+        string BuildLogsDirectory { get; }
+        IDataContext OpenContext();
+        void RegisterProject(Project project);
     }
 
     public class ProjectService : IProjectService
@@ -33,6 +37,8 @@ namespace KissCI.Internal.Domain
             EnsureFolders();
             _factory = factory;
             _dataProvider = dataProvider;
+
+            EnsureProjectInfos();
         }
 
         string _projectFolder;
@@ -53,13 +59,87 @@ namespace KissCI.Internal.Domain
                     Directory.CreateDirectory(folder);
         }
 
+        void EnsureProjectInfos()
+        {
+            var projects = GetProjects();
+
+            using (var ctx = _dataProvider())
+            {
+                var infos = ctx.ProjectInfoService.GetProjectInfos().ToList();
+                foreach (var proj in projects)
+                {
+                    if (infos.Any(i => i.ProjectName == proj.Name) == false)
+                    {
+                        var info = new ProjectInfo
+                        {
+                            ProjectName = proj.Name,
+                            Activity = Activity.Sleeping,
+                            Status = Status.Running
+                        };
+
+                        ctx.ProjectInfoService.Save(info);
+                    }
+                }
+
+                ctx.Commit();
+            }
+        }
+
         string _directoryRoot;
         IProjectFactory _factory;
         Func<IDataContext> _dataProvider;
 
-        public IEnumerable<Project> GetProjects()
+        IList<Project> _registeredProjects = new List<Project>();
+
+        public void RegisterProject(Project project)
         {
-            return _factory.FetchProjects();
+            using (var ctx = _dataProvider())
+            {
+                var infos = ctx.ProjectInfoService.GetProjectInfos().ToList();
+                if (infos.Any(i => i.ProjectName == project.Name) == false)
+                {
+                    var info = new ProjectInfo
+                    {
+                        ProjectName = project.Name,
+                        Activity = Activity.Sleeping,
+                        Status = Status.Running
+                    };
+
+                    ctx.ProjectInfoService.Save(info);
+                    _registeredProjects.Add(project);
+                }
+
+                ctx.Commit();
+            }
+        }
+
+        public string BuildLogsDirectory { get { return _logFolder; } }
+
+        public IDataContext OpenContext() { return _dataProvider(); }
+
+        public IList<Project> GetProjects()
+        {
+            return _factory.FetchProjects().Concat(_registeredProjects).ToList();
+        }
+
+        public IEnumerable<ProjectView> GetProjectViews()
+        {
+            using(var provider = _dataProvider()){
+                var builds = provider.ProjectBuildService.GetBuilds().OrderByDescending(b=>b.BuildTime);
+                var messages = provider.TaskMessageService.GetMessages().OrderByDescending(m => m.Time);
+
+                var views = from i in provider.ProjectInfoService.GetProjectInfos()
+                           select new ProjectView
+                           {
+                               Info = i,
+                               LastBuild = builds.FirstOrDefault(b => b.ProjectInfoId == i.Id),
+                               LastMessage = messages.FirstOrDefault(m => m.ProjectInfoId == i.Id)
+                           };
+
+                var result = views.ToList();
+
+                return result.Where(v=> GetProjects().Any(p=>p.Name == v.Info.ProjectName));
+            }
         }
 
         string GetDirectory(string projectName)
@@ -81,45 +161,29 @@ namespace KissCI.Internal.Domain
             return GetProjects().FirstOrDefault(p => p.Name == projectName);
         }
 
-        
-
-        //ProjectBuild GetBuild(string projectName, DirectoryInfo info)
-        //{
-        //    var proj = GetProject(projectName);
-        //    var build =  new ProjectBuild();
-        //    build.ProjectName = projectName;
-        //    build.BuildTime = DateTime.ParseExact(info.Name, "yyyy-MM-dd HH-mm-ss", null);
-        //    build.TaskMessages = _messageService.GetMessages();
-        //    build.BuildLog = new Lazy<Stream>(() =>
-        //    {
-        //        return File.Open(Path.Combine(info.FullName, "buildlog.txt"), FileMode.Open);
-        //    });
-                
-        //    return build;
-        //}
-
         public ProjectBuild GetMostRecentBuild(string projectName)
         {
-            return _dataProvider().ProjectBuildService.GetMostRecentBuild(projectName);
+            using (var provider = _dataProvider())
+            {
+                return provider.ProjectBuildService.GetMostRecentBuild(projectName);
+            }
+            
         }
 
         public IEnumerable<ProjectBuild> GetBuilds(string projectName)
         {
-            return _dataProvider().ProjectBuildService.GetBuilds(projectName);
-        }
-
-        class ProjectStatus
-        {
-            public DateTime LastUpdated { get; set; }
-            public Status Status { get; set; }
-            public string ProjectName { get; set; }
-            
-            
+            using (var provider = _dataProvider())
+            {
+                return provider.ProjectBuildService.GetBuildsForProject(projectName).ToList();
+            }
         }
 
         public ProjectInfo GetProjectInfo(string projectName)
         {
-            return _dataProvider().ProjectInfoService.GetProjectInfo(projectName);
+            using (var provider = _dataProvider())
+            {
+                return provider.ProjectInfoService.GetProjectInfo(projectName);
+            }
         }
 
         ConcurrentDictionary<string, RunningTaskInfo> _runningTasks = new ConcurrentDictionary<string, RunningTaskInfo>();
@@ -139,7 +203,10 @@ namespace KissCI.Internal.Domain
             var tokenSource = new CancellationTokenSource();
             var task = new Task(() => {
 
-                ProjectHelper.Run(project);
+                ProjectHelper.Run(project, this);
+
+                RunningTaskInfo tempInfo;
+                _runningTasks.TryRemove(projectName, out tempInfo);
 
             }, tokenSource.Token);
 

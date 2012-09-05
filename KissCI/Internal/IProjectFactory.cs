@@ -9,7 +9,7 @@ namespace KissCI.Internal
 {
     public interface IProjectFactory : IDisposable
     {
-        IEnumerable<Project> FetchProjects();
+        IList<Project> FetchProjects();
     }
 
     public class MainProjectFactory : IProjectFactory
@@ -52,7 +52,7 @@ namespace KissCI.Internal
             _projects = providers.SelectMany(p => p.Projects()).ToList();
         }
 
-        public IEnumerable<Project> FetchProjects()
+        public IList<Project> FetchProjects()
         {
             return _projects;
         }

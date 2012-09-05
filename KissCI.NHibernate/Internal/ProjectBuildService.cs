@@ -17,7 +17,12 @@ namespace KissCI.NHibernate.Internal
 
         readonly ISession _session;
 
-        public IQueryable<ProjectBuild> GetBuilds(string projectName)
+        public IQueryable<ProjectBuild> GetBuilds()
+        {
+            return _session.Query<ProjectBuild>().OrderByDescending(b => b.BuildTime);
+        }
+
+        public IQueryable<ProjectBuild> GetBuildsForProject(string projectName)
         {
             var builds = from i in _session.Query<ProjectInfo>()
                          from b in _session.Query<ProjectBuild>()
@@ -30,7 +35,14 @@ namespace KissCI.NHibernate.Internal
 
         public ProjectBuild GetMostRecentBuild(string projectName)
         {
-            return GetBuilds(projectName).FirstOrDefault();
+            return GetBuildsForProject(projectName).FirstOrDefault();
         }
+
+        public void Save(ProjectBuild build)
+        {
+            _session.Save(build);
+        }
+
+        
     }
 }
