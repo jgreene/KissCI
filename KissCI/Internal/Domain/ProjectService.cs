@@ -82,7 +82,7 @@ namespace KissCI.Internal.Domain
 
         IList<Project> _registeredProjects = new List<Project>();
 
-        void UpdateInfo(IDataContext ctx, Project project, IList<ProjectInfo> infos)
+        void UpdateInfo(IDataContext ctx, Project project, IList<ProjectInfo> infos, bool isRegistration = false)
         {
             if (infos.Any(i => i.ProjectName == project.Name) == false)
             {
@@ -95,7 +95,9 @@ namespace KissCI.Internal.Domain
                 };
 
                 ctx.ProjectInfoService.Save(info);
-                _registeredProjects.Add(project);
+
+                if(isRegistration)
+                    _registeredProjects.Add(project);
             }
             else
             {
@@ -114,7 +116,7 @@ namespace KissCI.Internal.Domain
             using (var ctx = _dataProvider())
             {
                 var infos = ctx.ProjectInfoService.GetProjectInfos().ToList();
-                UpdateInfo(ctx, project, infos);
+                UpdateInfo(ctx, project, infos, true);
 
                 ctx.Commit();
             }

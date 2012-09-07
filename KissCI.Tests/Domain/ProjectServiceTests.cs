@@ -118,8 +118,9 @@ namespace KissCI.Tests.Domain
                 var projects = service.GetProjects();
                 var views = service.GetProjectViews();
 
-
-                Assert.IsTrue(projects.Count == views.Count());
+                var projectCount = projects.Count;
+                var viewCount = projects.Count();
+                Assert.IsTrue(projectCount == viewCount);
             }
         }
     }
