@@ -9,11 +9,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading;
 using KissCI.Helpers;
+using KissCI.Internal.Helpers;
 
 namespace KissCI.Internal.Domain
 {
     public interface IProjectService : IDisposable
     {
+        IEnumerable<string> GetCategories();
         IList<Project> GetProjects();
         IEnumerable<ProjectView> GetProjectViews();
         IEnumerable<ProjectBuild> GetBuilds(string projectName);
@@ -66,20 +68,9 @@ namespace KissCI.Internal.Domain
             using (var ctx = _dataProvider())
             {
                 var infos = ctx.ProjectInfoService.GetProjectInfos().ToList();
-                foreach (var proj in projects)
-                {
-                    if (infos.Any(i => i.ProjectName == proj.Name) == false)
-                    {
-                        var info = new ProjectInfo
-                        {
-                            ProjectName = proj.Name,
-                            Activity = Activity.Sleeping,
-                            Status = Status.Running
-                        };
 
-                        ctx.ProjectInfoService.Save(info);
-                    }
-                }
+                foreach (var project in projects)
+                    UpdateInfo(ctx, project, infos);
 
                 ctx.Commit();
             }
@@ -91,23 +82,39 @@ namespace KissCI.Internal.Domain
 
         IList<Project> _registeredProjects = new List<Project>();
 
+        void UpdateInfo(IDataContext ctx, Project project, IList<ProjectInfo> infos)
+        {
+            if (infos.Any(i => i.ProjectName == project.Name) == false)
+            {
+                var info = new ProjectInfo
+                {
+                    ProjectName = project.Name,
+                    Category = project.Category,
+                    Activity = Activity.Sleeping,
+                    Status = Status.Running
+                };
+
+                ctx.ProjectInfoService.Save(info);
+                _registeredProjects.Add(project);
+            }
+            else
+            {
+                //we update the category just in case it's been modified
+                var info = infos.FirstOrDefault(i => i.ProjectName == project.Name);
+                if (info != null)
+                {
+                    info.Category = project.Category;
+                    ctx.ProjectInfoService.Save(info);
+                }
+            }
+        }
+
         public void RegisterProject(Project project)
         {
             using (var ctx = _dataProvider())
             {
                 var infos = ctx.ProjectInfoService.GetProjectInfos().ToList();
-                if (infos.Any(i => i.ProjectName == project.Name) == false)
-                {
-                    var info = new ProjectInfo
-                    {
-                        ProjectName = project.Name,
-                        Activity = Activity.Sleeping,
-                        Status = Status.Running
-                    };
-
-                    ctx.ProjectInfoService.Save(info);
-                    _registeredProjects.Add(project);
-                }
+                UpdateInfo(ctx, project, infos);
 
                 ctx.Commit();
             }
@@ -124,19 +131,36 @@ namespace KissCI.Internal.Domain
 
         public IEnumerable<ProjectView> GetProjectViews()
         {
+
+            //nhibernate linq sucks so we are really inneficient here
             using(var provider = _dataProvider()){
-                var builds = provider.ProjectBuildService.GetBuilds().OrderByDescending(b=>b.BuildTime);
-                var messages = provider.TaskMessageService.GetMessages().OrderByDescending(m => m.Time);
+                var builds = provider.ProjectBuildService.GetBuilds().OrderByDescending(b => b.BuildTime).ThenByDescending(m => m.Id);
+                var messages = provider.TaskMessageService.GetMessages().OrderByDescending(m => m.Time).ThenByDescending(m => m.Id);
+                var infos = provider.ProjectInfoService.GetProjectInfos().ToList();
 
-                var views = from i in provider.ProjectInfoService.GetProjectInfos()
-                           select new ProjectView
-                           {
-                               Info = i,
-                               LastBuild = builds.FirstOrDefault(b => b.ProjectInfoId == i.Id),
-                               LastMessage = messages.FirstOrDefault(m => m.ProjectInfoId == i.Id)
-                           };
+                var views = new List<ProjectView>();
 
-                var result = views.ToList();
+                foreach (var i in infos)
+                {
+                    var lastBuild = builds.FirstOrDefault(f=>f.ProjectInfoId == i.Id);
+                    var lastMessage = lastBuild == null ? null : messages.FirstOrDefault(m =>
+                            lastBuild != null
+                            && m.ProjectInfoId == i.Id
+                            && m.ProjectBuildId == lastBuild.Id
+                            );
+
+                    var view = new ProjectView
+                    {
+                        Info = i,
+                        LastBuild = lastBuild,
+                        LastMessage = lastMessage
+                    };
+                    views.Add(view);
+                }
+
+              
+
+                var result = views.Distinct().ToList();
 
                 return result.Where(v=> GetProjects().Any(p=>p.Name == v.Info.ProjectName));
             }
@@ -159,6 +183,11 @@ namespace KissCI.Internal.Domain
         Project GetProject(string projectName)
         {
             return GetProjects().FirstOrDefault(p => p.Name == projectName);
+        }
+
+        public IEnumerable<string> GetCategories()
+        {
+            return GetProjects().Select(p => p.Category).Distinct();
         }
 
         public ProjectBuild GetMostRecentBuild(string projectName)
@@ -232,12 +261,32 @@ namespace KissCI.Internal.Domain
 
         public bool CancelProject(string projectName)
         {
-            RunningTaskInfo info;
-            if (_runningTasks.TryRemove(projectName, out info))
+            using (var ctx = _dataProvider())
             {
-                info.TokenSource.Cancel();
-                return true;
+                var projectInfo = ctx.ProjectInfoService.GetProjectInfo(projectName);
+                if (projectInfo.Activity != Activity.Building)
+                    return false;
+
+                RunningTaskInfo taskInfo;
+                if (_runningTasks.TryRemove(projectName, out taskInfo))
+                {
+                    taskInfo.TokenSource.Cancel();
+                    var build = ctx.ProjectBuildService.GetMostRecentBuild(projectName);
+                    build.BuildResult = BuildResult.Cancelled;
+
+                    ctx.TaskMessageService.WriteMessage(new TaskMessage
+                    {
+                        ProjectInfoId = projectInfo.Id,
+                        ProjectBuildId = build.Id,
+                        Time = TimeHelper.Now,
+                        Message = string.Format("Canceled build for project: {0}", projectInfo.ProjectName)
+                    });
+                    
+                    ctx.Commit();
+                    return true;
+                }
             }
+            
 
             return false;
         }

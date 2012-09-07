@@ -1,4 +1,5 @@
 ﻿using KissCI.Internal.Domain;
+using KissCI.NHibernate.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,40 @@ namespace KissCI.Web.Controllers
             return List(null);
         }
 
-        public ActionResult List(string category)
+        public ActionResult List(string categoryName)
         {
             var projects = ProjectService.GetProjectViews();
 
-            return View("List", projects);
+            if (string.IsNullOrEmpty(categoryName) == false)
+                projects = projects.Where(p => p.Info.Category == categoryName);
+
+            return View("List", Tuple.Create(categoryName, projects));
+        }
+
+        public ActionResult Categories()
+        {
+            var cats = ProjectService.GetCategories();
+
+            return View("Categories", cats);
+        }
+
+        [HttpPost]
+        public ActionResult Force(string projectName)
+        {
+            ProjectService.RunProject(projectName);
+            return Json(true);
+        }
+
+        public ActionResult Grid(string categoryName)
+        {
+            var projects = ProjectService.GetProjectViews();
+
+            if (string.IsNullOrEmpty(categoryName) == false)
+                projects = projects.Where(p => p.Info.Category == categoryName);
+
+
+
+            return PartialView("ProjectViewTable", Tuple.Create(categoryName, projects));
         }
 
     }

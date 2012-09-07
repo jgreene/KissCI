@@ -23,10 +23,10 @@ namespace KissCI.Tests.DataProviders
             var outputDirectory = Path.Combine(executableDirectory.FullName, "MessageService");
 
             DirectoryHelper.CleanAndEnsureDirectory(outputDirectory);
-            SessionManager.InitDb();
+            DataHelper.InitDb();
 
 
-            using (var dataProvider = new NHibernateDataContext())
+            using (var dataProvider = DataHelper.OpenContext())
             {
                 var service = dataProvider.TaskMessageService;
 
@@ -93,7 +93,7 @@ namespace KissCI.Tests.DataProviders
                 {
                     ProjectInfoId = 0,
                     BuildTime = TimeHelper.Now,
-                    BuildResult = BuildResult.None
+                    BuildResult = null
                 };
 
                 srv.Save(build);

@@ -40,7 +40,7 @@ namespace KissCI.NHibernate.Internal
 
         public void Save(ProjectBuild build)
         {
-            _session.Save(build);
+            _session.SaveOrUpdate(build);
         }
 
         

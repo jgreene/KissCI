@@ -25,7 +25,7 @@ namespace KissCI.Projects
             })
             .Finalize();
 
-            yield return new Project("WriteFileProject", "UI", fileTask);
+            yield return new Project("WriteFileProject", "IO Projects", fileTask);
 
             var sleepTask = TaskHelper.Start()
             .AddTask("Sleeping", (ctx, arg) => {
@@ -34,7 +34,7 @@ namespace KissCI.Projects
             })
             .Finalize();
 
-            yield return new Project("SleepProject", "UI", sleepTask);
+            yield return new Project("SleepProject", "Sleep Projects", sleepTask);
 
             var taskCounter = 1;
             var tasks = TaskHelper.Start()

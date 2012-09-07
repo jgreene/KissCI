@@ -14,8 +14,23 @@ namespace KissCI.NHibernate.Internal
 {
     public static class SessionManager
     {
-        const string fileName = "KissCI.db3";
+        public static void SetRoot(string rootDirectory){
+            _rootDirectory = rootDirectory;
+        }
 
+        static string _rootDirectory = "";
+
+        static string GetConnectionString()
+        {
+            var baseConn = System.Configuration.ConfigurationManager.ConnectionStrings["KissCIConnection"].ConnectionString;
+            if (string.IsNullOrEmpty(_rootDirectory) == false)
+                baseConn = baseConn.Replace("{AppDir}", _rootDirectory);
+            else
+                baseConn = baseConn.Replace("{AppDir}\\", "");
+            return baseConn;
+        }
+        
+        
         static ISessionFactory _factory;
         public static ISessionFactory SessionFactory
         {
@@ -37,7 +52,7 @@ namespace KissCI.NHibernate.Internal
 
             _config = Fluently.Configure()
                         .Database(
-                            SQLiteConfiguration.Standard.ConnectionString("Data Source=" + fileName)
+                            SQLiteConfiguration.Standard.ConnectionString(GetConnectionString())
                         )
                         .Mappings(m =>
                         {
@@ -51,7 +66,6 @@ namespace KissCI.NHibernate.Internal
 
         public static void InitDb()
         {
-            File.Delete(fileName);
             new SchemaUpdate(GetConfig()).Execute(true, true);
         }
 

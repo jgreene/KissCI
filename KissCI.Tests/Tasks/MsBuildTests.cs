@@ -1,5 +1,5 @@
 ﻿using KissCI.Helpers;
-using KissCI.Loggers;
+using KissCI.Internal.Helpers;
 using KissCI.Tasks;
 using KissCI.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

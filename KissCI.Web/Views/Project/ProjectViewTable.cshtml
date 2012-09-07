@@ -1,0 +1,33 @@
+﻿@model Tuple<string, IEnumerable<KissCI.Internal.Domain.ProjectView>>
+
+
+<table class="project-view-table table table-striped table-bordered" data-category="@Model.Item1">
+    <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Last Build Status</th>
+            <th>Last Build Time</th>
+            <th>Status</th>
+            <th>Activity</th>
+            <th>Messages</th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+    @foreach(var project in this.Model.Item2){
+        <tr data-project-name="@project.Info.ProjectName">
+            <td>@project.Info.ProjectName</td>
+            <td>@Html.Raw(project.LastBuild == null || project.LastBuild.BuildResult == null ? "" : project.LastBuild.BuildResult.Value.ToString())</td>
+            <td>@Html.Raw(project.LastBuild == null ? "" : project.LastBuild.BuildTime.ToString())</td>
+            <td>@project.Info.Status.ToString()</td>
+            <td>@project.Info.Activity.ToString()</td>
+            <td>@Html.Encode(project.LastMessage == null ? "" : project.LastMessage.Message)</td>
+            <td>
+                <a class="force-button" href="#">Force</a><br />
+                <a class="stop-button" href="#">Stop</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

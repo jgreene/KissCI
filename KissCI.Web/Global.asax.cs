@@ -1,4 +1,5 @@
 ﻿using KissCI.Internal;
+using KissCI.NHibernate.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,13 @@ namespace KissCI.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            StructuremapMvc.RegisterIoc(Server.MapPath("~/KissCI"), "");
+
+
+
+            var projectRoot = Server.MapPath("~/KissCI");
+            SessionManager.SetRoot(projectRoot);
+            SessionManager.InitDb();
+            StructuremapMvc.RegisterIoc(projectRoot);
         }
 
         protected void Application_End()

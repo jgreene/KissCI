@@ -8,7 +8,7 @@ namespace KissCI.Internal.Domain
 {
     public enum BuildResult : long
     {
-        None,
+        Cancelled,
         Failure,
         Success
     }
@@ -22,7 +22,6 @@ namespace KissCI.Internal.Domain
     public enum Activity : long
     {
         Sleeping,
-        Starting,
         Building,
         CleaningUp
     }
@@ -42,15 +41,15 @@ namespace KissCI.Internal.Domain
         public virtual long Id { get; set; }
         public virtual long ProjectInfoId { get; set; }
         public virtual DateTime BuildTime { get; set; }
-        public virtual DateTime CompleteTime { get; set; }
+        public virtual DateTime? CompleteTime { get; set; }
         public virtual Nullable<BuildResult> BuildResult { get; set; }
         public virtual string LogFile { get; set; }
-        public virtual Lazy<FileStream> BuildLog
+        public virtual Func<FileStream> BuildLog
         {
             get
             {
                 var logFile = this.LogFile;
-                return new Lazy<FileStream>(() => File.Open(logFile, FileMode.OpenOrCreate));
+                return new Func<FileStream>(() => File.Open(logFile, FileMode.OpenOrCreate));
             }
         }
     }
@@ -59,6 +58,7 @@ namespace KissCI.Internal.Domain
     {
         public virtual long Id { get; set; }
         public virtual string ProjectName { get; set; }
+        public virtual string Category { get; set; }
         public virtual Status Status { get; set; }
         public virtual Activity Activity { get; set; }
     }

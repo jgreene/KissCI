@@ -14,6 +14,7 @@ namespace KissCI.NHibernate.Internal.Mappings
         {
             Id(x => x.Id);
             Map(x => x.ProjectName);
+            Map(x => x.Category);
             Map(x => x.Status);
             Map(x => x.Activity);
         }

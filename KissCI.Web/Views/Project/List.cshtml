@@ -1,14 +1,16 @@
-﻿@model IEnumerable<KissCI.Project>
+﻿@model Tuple<string, IEnumerable<KissCI.Internal.Domain.ProjectView>>
 
 @{
     ViewBag.Title = "List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>List</h2>
-
-@{ foreach(var project in this.Model){
-       <div>@project.Name</div>
-    }
-}
+<div class="span3">
+    @{ Html.RenderAction("Categories", "Project"); }
+</div>
+<div class="span9">
+    <div class="project-view-table-container">
+    @{ Html.RenderPartial("ProjectViewTable", Model); }
+    </div>
+</div>
 

@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using KissCI.Tests.Helpers;
 using KissCI.Tasks;
 using KissCI.Helpers;
+using KissCI.Internal.Helpers;
 
 namespace KissCI.Tests.Tasks
 {

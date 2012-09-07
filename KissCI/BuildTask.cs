@@ -47,12 +47,15 @@ namespace KissCI
         public string ProjectName { get { return _info.ProjectName; } }
         public int TaskCount { get { return _taskCount; } }
 
-        public void LogMessage(string format, params object[] parameters)
+        internal void LogMessage(string format, params object[] parameters)
         {
+            Log(format, parameters);
             using (var ctx = _projectService.OpenContext())
             {
                 ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
                 {
+                    ProjectInfoId = _info.Id,
+                    ProjectBuildId = _build.Id,
                     Time = TimeHelper.Now,
                     Message = string.Format(format, parameters),
                 });
@@ -74,8 +77,24 @@ namespace KissCI
 
         internal void Cleanup()
         {
-            foreach(var act in _cleanupActions)
-                act();
+            var exceptions = new List<Exception>();
+            foreach (var act in _cleanupActions)
+            {
+                try
+                {
+                    act();
+                }
+                catch (Exception ex)
+                {
+                    Log("Cleanup failed on with an exception of: {0}", ex);
+                    exceptions.Add(ex);
+                }
+            }
+
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException(exceptions);
+            }
         }
     }
 
@@ -107,7 +126,7 @@ namespace KissCI
             {
                 var res = t.Binder(ctx, arg);
 
-                ctx.Log("Beginning task #{0} of {1} : {2}", taskNum, ctx.TaskCount, taskName);
+                ctx.LogMessage("Beginning task #{0} of {1} : {2}", taskNum, ctx.TaskCount, taskName);
 
                 return bind(ctx, res);
             });
@@ -135,7 +154,7 @@ namespace KissCI
         {
             return t.AddStep((ctx, arg) =>
             {
-                ctx.Log("Ending tasks for {0} successfully", ctx.ProjectName);
+                ctx.LogMessage("Ending tasks for {0} successfully", ctx.ProjectName);
                 return new BuildTaskEnd();
             });
         }

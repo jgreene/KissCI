@@ -20,7 +20,7 @@ namespace KissCI.NHibernate.Internal
 
         public void WriteMessage(TaskMessage message)
         {
-            _session.Save(message);
+            _session.SaveOrUpdate(message);
         }
 
         public IQueryable<TaskMessage> GetMessages()

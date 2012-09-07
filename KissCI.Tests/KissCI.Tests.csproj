@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="DataProviders\NHibernateDataContextTests.cs" />
     <Compile Include="Domain\ProjectServiceTests.cs" />
+    <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\ServiceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

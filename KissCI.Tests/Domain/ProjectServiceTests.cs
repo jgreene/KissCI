@@ -66,7 +66,7 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanGetProjectViews()
         {
-            SessionManager.InitDb();
+            DataHelper.InitDb();
 
             using(var provider = new KissCI.NHibernate.NHibernateDataContext()){
                 var projectInfo = new ProjectInfo
@@ -111,7 +111,7 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void ProjectInfoExistsPerTask()
         {
-            SessionManager.InitDb();
+            DataHelper.InitDb();
 
             using (var service = ServiceHelper.GetService())
             {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using KissCI.Tasks;
 using KissCI.Helpers;
+using KissCI.Internal.Helpers;
 
 namespace KissCI.Tests.Tasks
 {

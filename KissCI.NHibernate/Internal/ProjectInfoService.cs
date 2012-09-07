@@ -29,7 +29,7 @@ namespace KissCI.NHibernate.Internal
 
         public void Save(ProjectInfo info)
         {
-            _session.Save(info);
+            _session.SaveOrUpdate(info);
         }
     }
 }
