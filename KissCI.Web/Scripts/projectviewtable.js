@@ -26,14 +26,23 @@
 
     
     
-    $('.project-view-table-container').on('click', '.force-button', function (e) {
-        e.preventDefault();
-        var projectName = $(this).parent().parent().attr('data-project-name');
 
-        $.post('/project/force/?projectName=' + projectName, function (data) {
-            refreshGrid();
+    var bindProjectButton = function (name) {
+        var container = $('.project-view-table-container');
+        container.on('click', '.' + name + '-button', function (e) {
+            e.preventDefault();
+            var projectName = $(this).parent().parent().attr('data-project-name');
+
+            $.post('/project/' + name + '/?projectName=' + projectName, function (data) {
+                refreshGrid();
+            });
         });
-    });
+    };
+
+    bindProjectButton('force');
+    bindProjectButton('stop');
+    bindProjectButton('cancel');
+    bindProjectButton('start');
 
     setInterval(function () {
         refreshGrid();

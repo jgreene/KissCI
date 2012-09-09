@@ -31,6 +31,12 @@ namespace KissCI.Internal.Helpers
            
 
             ProjectInfo info = projectService.GetProjectInfo(project.Name);
+
+            if (info.Status == Status.Stopped)
+            {
+                throw new Exception("Project can not be built as it is currently stopped.  Reactivate the project to build it.");
+            }
+
             var now = TimeHelper.Now;
             ProjectBuild build = new ProjectBuild {
                 BuildTime = now,
@@ -92,10 +98,6 @@ namespace KissCI.Internal.Helpers
                 try
                 {
                     context.Cleanup();
-                }
-                catch
-                {
-                    throw;
                 }
                 finally
                 {

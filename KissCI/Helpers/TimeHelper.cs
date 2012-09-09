@@ -12,6 +12,11 @@ namespace KissCI.Helpers
             _timeFunc = timeFunc;
         }
 
+        public static void Reset()
+        {
+            _timeFunc = () => DateTime.Now;
+        }
+
         static Func<DateTime> _timeFunc = () => DateTime.Now;
 
         public static DateTime Now

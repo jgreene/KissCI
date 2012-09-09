@@ -74,6 +74,7 @@
     <Compile Include="Tasks\RobocopyTests.cs" />
     <Compile Include="Tasks\SubversionTests.cs" />
     <Compile Include="Tasks\TempDirectoryTests.cs" />
+    <Compile Include="Triggers\TriggerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Fakes Include="Fakes\KissCI.Tests.FakeTests.fakes" />

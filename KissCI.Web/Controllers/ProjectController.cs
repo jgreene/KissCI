@@ -36,15 +36,10 @@ namespace KissCI.Web.Controllers
         {
             var cats = ProjectService.GetCategories();
 
-            return View("Categories", cats);
+            return PartialView("Categories", cats);
         }
 
-        [HttpPost]
-        public ActionResult Force(string projectName)
-        {
-            ProjectService.RunProject(projectName);
-            return Json(true);
-        }
+        
 
         public ActionResult Grid(string categoryName)
         {
@@ -56,6 +51,36 @@ namespace KissCI.Web.Controllers
 
 
             return PartialView("ProjectViewTable", Tuple.Create(categoryName, projects));
+        }
+
+        [HttpPost]
+        public ActionResult Force(string projectName)
+        {
+            ProjectService.RunProject(projectName);
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult Cancel(string projectName)
+        {
+            ProjectService.CancelProject(projectName);
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult Stop(string projectName)
+        {
+            ProjectService.StopProject(projectName);
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult Start(string projectName)
+        {
+            ProjectService.StartProject(projectName);
+
+            return Json(true);
         }
 
     }

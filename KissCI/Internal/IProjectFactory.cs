@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KissCI.Triggers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,9 +32,10 @@ namespace KissCI.Internal
             LoadAssemblies();
         }
 
-        string _directory;
-        FileSystemWatcher _watcher;
+        readonly string _directory;
+        readonly FileSystemWatcher _watcher;
         IList<Project> _projects = new List<Project>();
+
 
         void LoadAssemblies()
         {

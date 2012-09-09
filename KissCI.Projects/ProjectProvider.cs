@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KissCI.Helpers;
+using KissCI.Triggers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +27,9 @@ namespace KissCI.Projects
             })
             .Finalize();
 
-            yield return new Project("WriteFileProject", "IO Projects", fileTask);
+            var project = new Project("WriteFileProject", "IO Projects", fileTask);
+
+            yield return project;
 
             var sleepTask = TaskHelper.Start()
             .AddTask("Sleeping", (ctx, arg) => {
@@ -34,7 +38,10 @@ namespace KissCI.Projects
             })
             .Finalize();
 
-            yield return new Project("SleepProject", "Sleep Projects", sleepTask);
+            project = new Project("SleepProject", "Sleep Projects", sleepTask);
+            project.AddTimer(DateTime.Parse("09/08/2012 6:20:00 PM"));
+
+            yield return project;
 
             var taskCounter = 1;
             var tasks = TaskHelper.Start()

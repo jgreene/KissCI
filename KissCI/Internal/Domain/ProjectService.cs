@@ -26,6 +26,8 @@ namespace KissCI.Internal.Domain
         string BuildLogsDirectory { get; }
         IDataContext OpenContext();
         void RegisterProject(Project project);
+        void StopProject(string projectName);
+        void StartProject(string projectName);
     }
 
     public class ProjectService : IProjectService
@@ -74,6 +76,28 @@ namespace KissCI.Internal.Domain
 
                 ctx.Commit();
             }
+        }
+
+        void StartTriggers()
+        {
+            var projects = this.GetProjects();
+
+            foreach (var project in projects)
+            {
+                foreach (var trigger in project.Triggers)
+                {
+                    trigger.Start(() => this.RunProject(project.Name));
+                }
+            }
+        }
+
+        void StopTriggers()
+        {
+            var projects = this.GetProjects();
+
+            foreach (var project in projects)
+                foreach (var trigger in project.Triggers)
+                    trigger.Stop();
         }
 
         string _directoryRoot;
@@ -134,7 +158,7 @@ namespace KissCI.Internal.Domain
         public IEnumerable<ProjectView> GetProjectViews()
         {
 
-            //nhibernate linq sucks so we are really inneficient here
+            //nhibernate linq sucks so we are really inneficient here with n + 2 queries
             using(var provider = _dataProvider()){
                 var builds = provider.ProjectBuildService.GetBuilds().OrderByDescending(b => b.BuildTime).ThenByDescending(m => m.Id);
                 var messages = provider.TaskMessageService.GetMessages().OrderByDescending(m => m.Time).ThenByDescending(m => m.Id);
@@ -155,12 +179,11 @@ namespace KissCI.Internal.Domain
                     {
                         Info = i,
                         LastBuild = lastBuild,
-                        LastMessage = lastMessage
+                        LastMessage = lastMessage,
+                        NextBuildTime = GetProject(i.ProjectName).Triggers.OrderBy(t=>t.NextBuild).Select(t=>t.NextBuild).FirstOrDefault()
                     };
                     views.Add(view);
                 }
-
-              
 
                 var result = views.Distinct().ToList();
 
@@ -234,10 +257,15 @@ namespace KissCI.Internal.Domain
             var tokenSource = new CancellationTokenSource();
             var task = new Task(() => {
 
-                ProjectHelper.Run(project, this);
-
-                RunningTaskInfo tempInfo;
-                _runningTasks.TryRemove(projectName, out tempInfo);
+                try
+                {
+                    ProjectHelper.Run(project, this);
+                }
+                finally
+                {
+                    RunningTaskInfo tempInfo;
+                    _runningTasks.TryRemove(projectName, out tempInfo);
+                }
 
             }, tokenSource.Token);
 
@@ -266,13 +294,17 @@ namespace KissCI.Internal.Domain
             using (var ctx = _dataProvider())
             {
                 var projectInfo = ctx.ProjectInfoService.GetProjectInfo(projectName);
-                if (projectInfo.Activity != Activity.Building)
+                if (projectInfo.Activity != Activity.Building && projectInfo.Activity != Activity.CleaningUp)
                     return false;
 
                 RunningTaskInfo taskInfo;
                 if (_runningTasks.TryRemove(projectName, out taskInfo))
                 {
                     taskInfo.TokenSource.Cancel();
+
+                    projectInfo.Activity = Activity.Sleeping;
+                    ctx.ProjectInfoService.Save(projectInfo);
+
                     var build = ctx.ProjectBuildService.GetMostRecentBuild(projectName);
                     build.BuildResult = BuildResult.Cancelled;
 
@@ -293,8 +325,44 @@ namespace KissCI.Internal.Domain
             return false;
         }
 
+        public void StopProject(string projectName)
+        {
+            var project = GetProject(projectName);
+            using (var ctx = this.OpenContext())
+            {
+                var info = ctx.ProjectInfoService.GetProjectInfo(projectName);
+                info.Activity = Activity.Sleeping;
+                info.Status = Status.Stopped;
+
+                ctx.ProjectInfoService.Save(info);
+
+                foreach (var trigger in project.Triggers)
+                    trigger.Stop();
+
+                ctx.Commit();
+            }
+        }
+
+        public void StartProject(string projectName)
+        {
+            var project = GetProject(projectName);
+
+            using (var ctx = this.OpenContext())
+            {
+                var info = ctx.ProjectInfoService.GetProjectInfo(projectName);
+                info.Activity = Activity.Sleeping;
+                info.Status = Status.Running;
+
+                foreach (var trigger in project.Triggers)
+                    trigger.Start(() => RunProject(project.Name));
+
+                ctx.Commit();
+            }
+        }
+
         public void Dispose()
         {
+            StopTriggers();
             _factory.Dispose();
         }
     }

@@ -7,6 +7,7 @@
             <th>Project Name</th>
             <th>Last Build Status</th>
             <th>Last Build Time</th>
+            <th>Next Build Time</th>
             <th>Status</th>
             <th>Activity</th>
             <th>Messages</th>
@@ -15,17 +16,51 @@
 
     </thead>
     <tbody>
+    @{ var showForce = new Func<KissCI.Internal.Domain.ProjectView, bool>((project) => {
+           return project.Info.Status != KissCI.Internal.Domain.Status.Stopped
+               && project.Info.Activity == KissCI.Internal.Domain.Activity.Sleeping;
+           
+       });
+    }
+
+    @{ var showCancel = new Func<KissCI.Internal.Domain.ProjectView, bool>((project) =>
+       {
+           return project.Info.Status == KissCI.Internal.Domain.Status.Running
+               && project.Info.Activity == KissCI.Internal.Domain.Activity.Building;
+       });
+    }
+
+    @{ var showStop = new Func<KissCI.Internal.Domain.ProjectView, bool>((project) =>
+       {
+           return project.Info.Status == KissCI.Internal.Domain.Status.Running
+               && project.Info.Activity == KissCI.Internal.Domain.Activity.Sleeping;
+       });
+    }
+
     @foreach(var project in this.Model.Item2){
         <tr data-project-name="@project.Info.ProjectName">
             <td>@project.Info.ProjectName</td>
             <td>@Html.Raw(project.LastBuild == null || project.LastBuild.BuildResult == null ? "" : project.LastBuild.BuildResult.Value.ToString())</td>
             <td>@Html.Raw(project.LastBuild == null ? "" : project.LastBuild.BuildTime.ToString())</td>
+            <td>@Html.Encode(project.NextBuildTime.HasValue ? project.NextBuildTime.Value.ToString() : "")</td>
             <td>@project.Info.Status.ToString()</td>
             <td>@project.Info.Activity.ToString()</td>
             <td>@Html.Encode(project.LastMessage == null ? "" : project.LastMessage.Message)</td>
             <td>
-                <a class="force-button" href="#">Force</a><br />
-                <a class="stop-button" href="#">Stop</a>
+                @if(showForce(project)){
+                    <a class="force-button" href="#">Force</a><br />
+                }
+
+                @if (showCancel(project)){
+                    <a class="cancel-button" href="#">Cancel</a><br />
+                }
+
+                @if(showStop(project)){
+                    <a class="stop-button" href="#">Stop</a>
+                }else if(project.Info.Status == KissCI.Internal.Domain.Status.Stopped){
+                    <a class="start-button" href="#">Start</a>
+                }
+                
             </td>
         </tr>
     }

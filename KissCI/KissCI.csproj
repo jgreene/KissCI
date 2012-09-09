@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildTask.cs" />
+    <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Internal\Domain\IProjectBuildService.cs" />
     <Compile Include="Internal\Domain\IProjectInfoService.cs" />
     <Compile Include="Internal\Domain\ITaskMessageService.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Tasks\Robocopy.cs" />
     <Compile Include="Tasks\Subversion.cs" />
     <Compile Include="Tasks\TempDirectory.cs" />
+    <Compile Include="Triggers\IntervalTrigger.cs" />
+    <Compile Include="Triggers\ITrigger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
