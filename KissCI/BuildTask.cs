@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace KissCI
@@ -19,7 +20,8 @@ namespace KissCI
             ProjectInfo info, 
             ProjectBuild build,
             ILogger logger, 
-            int taskCount)
+            int taskCount,
+            CancellationToken? token)
         {
             if (projectService == null)
                 throw new NullReferenceException("project service was null");
@@ -35,6 +37,7 @@ namespace KissCI
             _projectService = projectService;
             _info = info;
             _build = build;
+            _token = token;
         }
 
         readonly ILogger _logger;
@@ -42,6 +45,7 @@ namespace KissCI
         readonly ProjectInfo _info;
         readonly ProjectBuild _build;
         readonly IProjectService _projectService;
+        readonly CancellationToken? _token;
 
         public ILogger Logger { get { return _logger; } }
         public string ProjectName { get { return _info.ProjectName; } }
@@ -95,6 +99,12 @@ namespace KissCI
             {
                 throw new AggregateException(exceptions);
             }
+        }
+
+        public void ThrowIfCancellationRequested()
+        {
+            if(_token.HasValue)
+                _token.Value.ThrowIfCancellationRequested();
         }
     }
 

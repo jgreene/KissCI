@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace KissCI.Internal.Helpers
 {
@@ -20,7 +21,7 @@ namespace KissCI.Internal.Helpers
             return Path.Combine(directory, fileName);
         }
 
-        public static void Run(Project project, IProjectService projectService)
+        public static void Run(Project project, IProjectService projectService, CancellationToken? token = null)
         {
             if (project == null)
                 throw new NullReferenceException("Project was null");
@@ -28,14 +29,10 @@ namespace KissCI.Internal.Helpers
             if (project.Tasks == null)
                 throw new NullReferenceException("Project has no tasks to run");
 
-           
-
             ProjectInfo info = projectService.GetProjectInfo(project.Name);
 
             if (info.Status == Status.Stopped)
-            {
                 throw new Exception("Project can not be built as it is currently stopped.  Reactivate the project to build it.");
-            }
 
             var now = TimeHelper.Now;
             ProjectBuild build = new ProjectBuild {
@@ -43,6 +40,12 @@ namespace KissCI.Internal.Helpers
                 ProjectInfoId = info.Id,
                 LogFile = GetLogFileName(projectService.BuildLogsDirectory, project.Name, now),
             };
+
+            using (var ctx = projectService.OpenContext())
+            {
+                ctx.ProjectBuildService.Save(build);
+                ctx.Commit();
+            }
 
             var setActivity = new Action<Activity>((act) =>
             {
@@ -61,19 +64,14 @@ namespace KissCI.Internal.Helpers
                     build.BuildResult = stat;
                     build.CompleteTime = TimeHelper.Now;
                     ctx.ProjectBuildService.Save(build);
+
                     ctx.Commit();
                 }
             });
 
-            using (var ctx = projectService.OpenContext())
-            {
-                ctx.ProjectBuildService.Save(build);
-                ctx.Commit();
-            }
-
             var logger = new BuildLogger(build);
 
-            var context = new TaskContext(projectService, info, build, logger, project.Tasks.Count);
+            var context = new TaskContext(projectService, info, build, logger, project.Tasks.Count, token);
 
             context.LogMessage("Beginning tasks for {0}", context.ProjectName);
 
@@ -84,6 +82,11 @@ namespace KissCI.Internal.Helpers
                 project.Tasks.Binder(context, new BuildTaskStart());
 
                 setBuildStatus(BuildResult.Success);
+            }
+            catch (OperationCanceledException ex)
+            {
+                context.Log(ex.ToString());
+                setBuildStatus(BuildResult.Cancelled);
             }
             catch (Exception ex)
             {

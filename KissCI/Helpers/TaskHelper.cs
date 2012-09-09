@@ -14,6 +14,8 @@ namespace KissCI.Helpers
             {
                 var res = t.Binder(ctx, arg);
 
+                ctx.ThrowIfCancellationRequested();
+
                 ctx.LogMessage("Beginning task #{0} of {1} : {2}", taskNum, ctx.TaskCount, taskName);
 
                 return bind(ctx, res);
@@ -25,6 +27,8 @@ namespace KissCI.Helpers
             return new BuildTask<TArg, TNewResult>(t.Count, t.Name, (ctx, arg) =>
             {
                 var res = t.Binder(ctx, arg);
+
+                ctx.ThrowIfCancellationRequested();
 
                 return bind(ctx, res);
             });

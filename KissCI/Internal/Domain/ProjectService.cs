@@ -259,7 +259,7 @@ namespace KissCI.Internal.Domain
 
                 try
                 {
-                    ProjectHelper.Run(project, this);
+                    ProjectHelper.Run(project, this, tokenSource.Token);
                 }
                 finally
                 {
@@ -300,6 +300,7 @@ namespace KissCI.Internal.Domain
                 RunningTaskInfo taskInfo;
                 if (_runningTasks.TryRemove(projectName, out taskInfo))
                 {
+                    
                     taskInfo.TokenSource.Cancel();
 
                     projectInfo.Activity = Activity.Sleeping;

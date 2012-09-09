@@ -24,25 +24,21 @@
         });
     };
 
-    
-    
+    var bindProjectButtons = function (names) {
+        _.each(names, function (name) {
+            var container = $('.project-view-table-container');
+            container.on('click', '.' + name + '-button', function (e) {
+                e.preventDefault();
+                var projectName = $(this).parent().parent().attr('data-project-name');
 
-    var bindProjectButton = function (name) {
-        var container = $('.project-view-table-container');
-        container.on('click', '.' + name + '-button', function (e) {
-            e.preventDefault();
-            var projectName = $(this).parent().parent().attr('data-project-name');
-
-            $.post('/project/' + name + '/?projectName=' + projectName, function (data) {
-                refreshGrid();
+                $.post('/project/' + name + '/?projectName=' + projectName, function (data) {
+                    refreshGrid();
+                });
             });
         });
     };
 
-    bindProjectButton('force');
-    bindProjectButton('stop');
-    bindProjectButton('cancel');
-    bindProjectButton('start');
+    bindProjectButtons(['force', 'stop', 'cancel', 'start']);
 
     setInterval(function () {
         refreshGrid();
