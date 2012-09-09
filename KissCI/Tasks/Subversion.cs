@@ -17,10 +17,10 @@ namespace KissCI.Tasks
             _password = password;
         }
 
-        string _trunkUrl;
-        string _destination;
-        string _userName;
-        string _password;
+        readonly string _trunkUrl;
+        readonly string _destination;
+        readonly string _userName;
+        readonly string _password;
 
         public string TrunkUrl { get { return _trunkUrl; } }
         public string Destination { get { return _destination; } }

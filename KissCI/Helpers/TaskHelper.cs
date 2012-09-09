@@ -55,5 +55,10 @@ namespace KissCI.Helpers
         {
             return act(Start()).Finalize();
         }
+
+        //public static BuildTask<TArg1, TResult2> Combine<TArg1, TResult1, TArg2, TResult2>(BuildTask<TArg1, TResult1> t1, BuildTask<TArg2, TResult2> t2)
+        //{
+        //    return t1.AddTask(t2.Name, t2.Binder);
+        //}
     }
 }

@@ -34,6 +34,17 @@ namespace KissCI.Tasks
 
     public static class MsBuild
     {
+        public static BuildTask<TArg, MsBuildResult> TempMsBuild4_0<TArg, TResult>(this BuildTask<TArg, TResult> t, string tempRoot, string projectFile, string configuration)
+        {
+            return t.AddStep((ctx, arg) =>
+            {
+                var temp = new TempDirectory(tempRoot);
+                ctx.RegisterCleanup(() => temp.Dispose());
+
+                return new MsBuildArgs(projectFile, temp.DirectoryPath, configuration);
+            }).MsBuild4_0();
+        }
+
         public static BuildTask<TArg, MsBuildResult> MsBuild4_0<TArg, TResult>(this BuildTask<TArg, TResult> t, string projectFile, string outputPath, string configuration)
         {
             return t.AddStep((ctx, arg) =>
@@ -49,7 +60,7 @@ namespace KissCI.Tasks
             {
                 var targetArg = !string.IsNullOrEmpty(arg.Target) ? "target:" + arg.Target : "";
                 var warningArg = arg.WarningLevel.HasValue ? string.Format("/property:WarningLevel={0}", arg.WarningLevel.Value) : "";
-                var outputArg = string.Format("/p:OutputPath={0}", arg.OutputPath);
+                var outputArg = string.Format(@"/p:OutDir={0}\ /p:OutputPath=bin\", arg.OutputPath);
                 var configurationArg = string.Format("/p:Configuration={0}", arg.Configuration);
                 var projectArg = arg.ProjectFile;
 

@@ -7,14 +7,60 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using KissCI.Tasks;
 
 namespace KissCI.Projects
 {
     public class ProjectProvider : IProjectProvider
     {
+        void EnsureDirectories(params string[] directories)
+        {
+            foreach (var dir in directories)
+                if (Directory.Exists(dir) == false)
+                    Directory.CreateDirectory(dir);
+        }
+
+        Project GetServiceProject()
+        {
+            var root = @"C:\Projects\Builds\";
+            var sourceRoot = Path.Combine(root, "Source");
+            var tempRoot = Path.Combine(root, "TempDirectories");
+            var outputDir = Path.Combine(root, "BuildOutput");
+            var outputTo = Path.Combine(outputDir, "KissCI.Service");
+            var outputWebTo = Path.Combine(outputTo, "KissCI.Web");
+
+            EnsureDirectories(root, sourceRoot, tempRoot, outputDir, outputTo, outputWebTo);
+
+            var serviceTask = TaskHelper.Start()
+            .Git("https://github.com/jgreene/KissCI.git", sourceRoot)
+            .TempMsBuild4_0(tempRoot, Path.Combine(sourceRoot, "KissCI.Service", "KissCI.Service.csproj"), "Debug")
+            .AddStep((ctx, arg) =>
+            {
+                return new RobocopyArgs(arg.OutputPath, outputTo);
+            })
+            .Robocopy()
+            .TempMsBuild4_0(tempRoot, Path.Combine(sourceRoot, "KissCI.Web", "KissCI.Web.csproj"), "Debug")
+            .AddStep((ctx, arg) =>
+            {
+                return new RobocopyArgs(arg.OutputPath, outputWebTo);
+            })
+            .Robocopy()
+            .Finalize();
+            
+
+
+            var project = new Project("KissCI.Service", "Services", serviceTask);
+            project.AddTimer(TimeHelper.Now);
+            return project;
+        }
+
+
+
 
         public IEnumerable<Project> Projects()
         {
+            yield return GetServiceProject();
+
             var current = DirectoryHelper.CurrentDirectory().Parent.Parent;
 
             var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");

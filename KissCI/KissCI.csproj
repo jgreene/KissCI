@@ -73,6 +73,7 @@
     <Compile Include="IProjectProvider.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\Git.cs" />
     <Compile Include="Tasks\MsBuild4_0.cs" />
     <Compile Include="Tasks\MsTest.cs" />
     <Compile Include="Tasks\Robocopy.cs" />
