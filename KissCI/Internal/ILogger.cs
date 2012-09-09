@@ -38,7 +38,8 @@ namespace KissCI.Internal
 
             public void Log(string format, params object[] parameters)
             {
-                _writer.WriteLine(string.Format(format, parameters));
+                var now = TimeHelper.Now;
+                _writer.WriteLine(now.ToString() + " : " + string.Format(format, parameters));
             }
 
             public void Dispose()
