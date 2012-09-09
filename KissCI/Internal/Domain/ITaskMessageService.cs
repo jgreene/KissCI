@@ -11,7 +11,7 @@ namespace KissCI.Internal.Domain
     public interface ITaskMessageService
     {
         void WriteMessage(TaskMessage message);
-        IQueryable<TaskMessage> GetMessagesForBuild(int buildId);
+        IQueryable<TaskMessage> GetMessagesForBuild(long buildId);
         IQueryable<TaskMessage> GetMessages();
     }
 }

@@ -44,14 +44,6 @@ namespace KissCI.Internal.Domain
         public virtual DateTime? CompleteTime { get; set; }
         public virtual Nullable<BuildResult> BuildResult { get; set; }
         public virtual string LogFile { get; set; }
-        public virtual Func<FileStream> BuildLog
-        {
-            get
-            {
-                var logFile = this.LogFile;
-                return new Func<FileStream>(() => File.Open(logFile, FileMode.OpenOrCreate));
-            }
-        }
     }
 
     public class ProjectInfo

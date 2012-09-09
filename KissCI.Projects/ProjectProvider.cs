@@ -43,6 +43,17 @@ namespace KissCI.Projects
 
             yield return project;
 
+            var failTask = TaskHelper.Start()
+            .AddTask("Fail", (ctx, arg) => {
+                throw new Exception("Fail");
+                return 1;
+            })
+            .Finalize();
+
+            project = new Project("Fail project", "Fail Projects", failTask);
+
+            yield return project;
+
             var taskCounter = 1;
             var tasks = TaskHelper.Start()
             .AddTask("Fake task", (ctx, arg) => {

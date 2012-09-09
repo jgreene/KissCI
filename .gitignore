@@ -62,3 +62,6 @@ packages/
 
 #Test files
 *.testsettings
+
+
+KissCI.Web/KissCI/

@@ -1,0 +1,45 @@
+﻿@model KissCI.Web.Models.Project.BuildLogView
+
+@{
+    ViewBag.Title = "Build Log";
+}
+
+<h4>@Model.Info.Category</h4>
+<h1>@Model.Info.ProjectName</h1>
+
+<div class="span12">
+    
+    <table class="table table-condensed">
+        <caption>Summary</caption>
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var msg in Model.Messages)
+            {
+                <tr>
+                    <td>@msg.Time.ToString()</td>
+                    <td>@msg.Message</td>
+                </tr>
+                
+            }
+        </tbody>
+    </table>
+
+    <div class="log">
+        <fieldset>
+            <legend>Log</legend>
+        @{ 
+            using(var reader = File.OpenText(Model.Build.LogFile)){
+                string line;
+                while((line = reader.ReadLine()) != null){
+                    <div>@line</div>
+                }
+            }
+        }
+        </fieldset>
+    </div>
+</div>

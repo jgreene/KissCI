@@ -1,0 +1,12 @@
+﻿@model KissCI.Web.Models.Project.ProjectBuildView
+
+@{
+    ViewBag.Title = @Model.Info.ProjectName;
+}
+
+<h4>@Model.Info.Category</h4>
+<h1>@Model.Info.ProjectName</h1>
+
+<div class="span12">
+    @{ Html.RenderPartial("ProjectBuildTable", Model.Builds); }
+</div>

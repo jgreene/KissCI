@@ -28,7 +28,7 @@ namespace KissCI.NHibernate.Internal
             return _session.Query<TaskMessage>();
         }
 
-        public IQueryable<TaskMessage> GetMessagesForBuild(int buildId)
+        public IQueryable<TaskMessage> GetMessagesForBuild(long buildId)
         {
             return GetMessages().Where(tm => tm.ProjectBuildId == buildId);
         }

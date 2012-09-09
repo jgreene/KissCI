@@ -69,42 +69,43 @@ namespace KissCI.Internal.Helpers
                 }
             });
 
-            var logger = new BuildLogger(build);
-
-            var context = new TaskContext(projectService, info, build, logger, project.Tasks.Count, token);
-
-            context.LogMessage("Beginning tasks for {0}", context.ProjectName);
-
-            setActivity(Activity.Building);
-
-            try
+            using (var logger = new BuildLogger(build))
             {
-                project.Tasks.Binder(context, new BuildTaskStart());
+                var context = new TaskContext(projectService, info, build, logger, project.Tasks.Count, token);
 
-                setBuildStatus(BuildResult.Success);
-            }
-            catch (OperationCanceledException ex)
-            {
-                context.Log(ex.ToString());
-                setBuildStatus(BuildResult.Cancelled);
-            }
-            catch (Exception ex)
-            {
-                context.LogMessage("Build failed with an exception of: {0}", ex);
-                setBuildStatus(BuildResult.Failure);
-                throw;
-            }
-            finally
-            {
-                setActivity(Activity.CleaningUp);
+                context.LogMessage("Beginning tasks for {0}", context.ProjectName);
+
+                setActivity(Activity.Building);
 
                 try
                 {
-                    context.Cleanup();
+                    project.Tasks.Binder(context, new BuildTaskStart());
+
+                    setBuildStatus(BuildResult.Success);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    context.Log(ex.ToString());
+                    setBuildStatus(BuildResult.Cancelled);
+                }
+                catch (Exception ex)
+                {
+                    context.LogMessage("Build failed with an exception of: {0}", ex);
+                    setBuildStatus(BuildResult.Failure);
+                    throw;
                 }
                 finally
                 {
-                    setActivity(Activity.Sleeping);
+                    setActivity(Activity.CleaningUp);
+
+                    try
+                    {
+                        context.Cleanup();
+                    }
+                    finally
+                    {
+                        setActivity(Activity.Sleeping);
+                    }
                 }
             }
         }

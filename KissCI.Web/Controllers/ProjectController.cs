@@ -1,5 +1,6 @@
 ﻿using KissCI.Internal.Domain;
 using KissCI.NHibernate.Internal;
+using KissCI.Web.Models.Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +82,49 @@ namespace KissCI.Web.Controllers
             ProjectService.StartProject(projectName);
 
             return Json(true);
+        }
+
+        public ActionResult Builds(string projectName)
+        {
+            using(var ctx = ProjectService.OpenContext()){
+                var info = ctx.ProjectInfoService.GetProjectInfo(projectName);
+                var builds = ctx.ProjectBuildService
+                    .GetBuildsForProject(projectName)
+                    .OrderByDescending(b => b.BuildTime)
+                    .Take(100)
+                    .ToList();
+
+                var view = new ProjectBuildView{
+                    Info = info,
+                    Builds = builds
+                };
+
+                return View("ProjectBuilds", view);
+            }
+            
+        }
+
+        public ActionResult Log(long id)
+        {
+            using (var ctx = ProjectService.OpenContext())
+            {
+                var build = ctx.ProjectBuildService.GetBuilds().FirstOrDefault(b => b.Id == id);
+                if (build == null)
+                    return new HttpNotFoundResult();
+
+                var info = ctx.ProjectInfoService.GetProjectInfos().FirstOrDefault(i => i.Id == build.ProjectInfoId);
+
+                var messages = ctx.TaskMessageService.GetMessagesForBuild(id).ToList();
+
+                var view = new BuildLogView
+                {
+                    Info = info,
+                    Build = build,
+                    Messages = messages
+                };
+
+                return View("BuildLog", view);
+            }
         }
 
     }

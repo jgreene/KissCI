@@ -149,12 +149,15 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\ProjectLogView.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="DependencyResolution\StructureMapDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapDependencyScope.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Project\BuildLogView.cs" />
+    <Compile Include="Models\Project\ProjectBuildView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -203,13 +206,16 @@
     <Content Include="Views\Project\List.cshtml" />
     <Content Include="Views\Project\Categories.cshtml" />
     <Content Include="Views\Project\ProjectViewTable.cshtml" />
+    <Content Include="Views\Project\ProjectBuilds.cshtml" />
+    <Content Include="Views\Project\ProjectBuildTable.cshtml" />
+    <Content Include="Views\Project\BuildLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Helpers\" />
     <Folder Include="KissCI\Builds\" />
     <Folder Include="KissCI\Logs\" />
     <Folder Include="KissCI\Projects\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

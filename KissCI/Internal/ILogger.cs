@@ -30,12 +30,10 @@ namespace KissCI.Internal
             public BuildLogger(ProjectBuild build)
             {
                 _build = build;
-                _fileStream = _build.BuildLog();
-                _writer = new StreamWriter(_fileStream);
+                _writer = File.AppendText(_build.LogFile);
             }
 
             readonly ProjectBuild _build;
-            readonly FileStream _fileStream;
             readonly StreamWriter _writer;
 
             public void Log(string format, params object[] parameters)
@@ -45,7 +43,6 @@ namespace KissCI.Internal
 
             public void Dispose()
             {
-                _fileStream.Dispose();
                 _writer.Dispose();
             }
         }

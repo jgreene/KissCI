@@ -4,6 +4,7 @@
 <table class="project-view-table table table-striped table-bordered" data-category="@Model.Item1">
     <thead>
         <tr>
+            <th></th>
             <th>Project Name</th>
             <th>Last Build Status</th>
             <th>Last Build Time</th>
@@ -11,7 +12,6 @@
             <th>Status</th>
             <th>Activity</th>
             <th>Messages</th>
-            <th></th>
         </tr>
 
     </thead>
@@ -39,13 +39,6 @@
 
     @foreach(var project in this.Model.Item2){
         <tr data-project-name="@project.Info.ProjectName">
-            <td>@project.Info.ProjectName</td>
-            <td>@Html.Raw(project.LastBuild == null || project.LastBuild.BuildResult == null ? "" : project.LastBuild.BuildResult.Value.ToString())</td>
-            <td>@Html.Raw(project.LastBuild == null ? "" : project.LastBuild.BuildTime.ToString())</td>
-            <td>@Html.Encode(project.NextBuildTime.HasValue ? project.NextBuildTime.Value.ToString() : "")</td>
-            <td>@project.Info.Status.ToString()</td>
-            <td>@project.Info.Activity.ToString()</td>
-            <td>@Html.Encode(project.LastMessage == null ? "" : project.LastMessage.Message)</td>
             <td>
                 @if(showForce(project)){
                     <a class="force-button" href="#">Force</a><br />
@@ -62,6 +55,36 @@
                 }
                 
             </td>
+            <td>@Html.ActionLink(project.Info.ProjectName, "Builds", new { projectName = project.Info.ProjectName })</td>
+            @if (project.LastBuild != null)
+            {
+                if (project.LastBuild.BuildResult.HasValue)
+                {
+                    if(project.LastBuild.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Success){
+                    <td class="text-success">@project.LastBuild.BuildResult.ToString()</td>
+                    }else if(project.LastBuild.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Failure){
+                    <td class="text-error">@project.LastBuild.BuildResult.ToString()</td>
+                    }
+                    else if (project.LastBuild.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Cancelled)
+                    {
+                    <td class="text-warning">@project.LastBuild.BuildResult.ToString()</td>
+                    }
+                }else{
+                    <td></td>
+                }
+                
+                <td>@project.LastBuild.BuildTime.ToString()</td>
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+            }
+            <td>@Html.Encode(project.NextBuildTime.HasValue ? project.NextBuildTime.Value.ToString() : "")</td>
+            <td>@project.Info.Status.ToString()</td>
+            <td>@project.Info.Activity.ToString()</td>
+            <td>@Html.Encode(project.LastMessage == null ? "" : project.LastMessage.Message)</td>
+            
         </tr>
     }
     </tbody>
