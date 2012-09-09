@@ -50,5 +50,10 @@ namespace KissCI.Helpers
                 return new BuildTaskEnd();
             });
         }
+
+        public static BuildTask<BuildTaskStart, BuildTaskEnd> Create<TResult>(Func<BuildTask<BuildTaskStart, BuildTaskStart>, BuildTask<BuildTaskStart, TResult>> act)
+        {
+            return act(Start()).Finalize();
+        }
     }
 }

@@ -40,6 +40,7 @@
       <HintPath>..\packages\CassiniDev.4.0\lib\net40\CassiniDev4-lib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />

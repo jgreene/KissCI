@@ -62,7 +62,7 @@ namespace KissCI.Tests.DataProviders
         public void CanSaveProjectInfo()
         {
             SessionManager.InitDb();
-            using (var ctx = new KissCI.NHibernate.NHibernateDataContext())
+            using (var ctx = new KissCI.Internal.NHibernate.NHibernateDataContext())
             {
 
                 var srv = ctx.ProjectInfoService;
@@ -84,7 +84,7 @@ namespace KissCI.Tests.DataProviders
         public void CanSaveProjectBuild()
         {
             SessionManager.InitDb();
-            using (var ctx = new KissCI.NHibernate.NHibernateDataContext())
+            using (var ctx = new KissCI.Internal.NHibernate.NHibernateDataContext())
             {
 
                 var srv = ctx.ProjectBuildService;

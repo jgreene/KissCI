@@ -32,7 +32,7 @@ namespace KissCI.Tests.Tasks
 
             var project = new Project("TestProject", "UI", tasks);
 
-            using (var projectService = ServiceHelper.GetService())
+            using (var projectService = TestHelper.GetService())
             {
                 ProjectHelper.Run(project, projectService);
             }

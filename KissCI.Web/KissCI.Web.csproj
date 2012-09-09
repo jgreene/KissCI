@@ -221,10 +221,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KissCI.NHibernate\KissCI.NHibernate.csproj">
-      <Project>{c1fc9008-dd85-4a90-8da4-6909de62e82a}</Project>
-      <Name>KissCI.NHibernate</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KissCI\KissCI.csproj">
       <Project>{677930eb-ca6f-4d7e-a6e5-153c27db9833}</Project>
       <Name>KissCI</Name>

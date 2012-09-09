@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KissCI.Service", "KissCI.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KissCI.Projects", "KissCI.Projects\KissCI.Projects.csproj", "{88CCE70B-5B17-42C4-A84F-E069A9BE80A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KissCI.NHibernate", "KissCI.NHibernate\KissCI.NHibernate.csproj", "{C1FC9008-DD85-4A90-8DA4-6909DE62E82A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,10 +43,6 @@ Global
 		{88CCE70B-5B17-42C4-A84F-E069A9BE80A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88CCE70B-5B17-42C4-A84F-E069A9BE80A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88CCE70B-5B17-42C4-A84F-E069A9BE80A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1FC9008-DD85-4A90-8DA4-6909DE62E82A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1FC9008-DD85-4A90-8DA4-6909DE62E82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1FC9008-DD85-4A90-8DA4-6909DE62E82A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1FC9008-DD85-4A90-8DA4-6909DE62E82A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

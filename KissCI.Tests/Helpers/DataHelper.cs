@@ -18,7 +18,7 @@ namespace KissCI.Tests.Helpers
 
         public static IDataContext OpenContext()
         {
-            return new NHibernate.NHibernateDataContext();
+            return new KissCI.Internal.NHibernate.NHibernateDataContext();
         }
     }
 }

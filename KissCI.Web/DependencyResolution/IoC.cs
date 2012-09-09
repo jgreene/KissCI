@@ -7,7 +7,7 @@ namespace KissCI.Web {
     public static class IoC {
         public static IContainer Initialize(string projectRoot) {
             var projectFactory = new MainProjectFactory(Path.Combine(projectRoot, "Projects"));
-            var projectService = new ProjectService(projectRoot, projectFactory, () => new KissCI.NHibernate.NHibernateDataContext());
+            var projectService = new ProjectService(projectRoot, projectFactory, () => new KissCI.Internal.NHibernate.NHibernateDataContext());
 
             ObjectFactory.Initialize(x =>
                         {

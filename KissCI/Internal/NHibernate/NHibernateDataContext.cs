@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace KissCI.NHibernate
+namespace KissCI.Internal.NHibernate
 {
     public class NHibernateDataContext : IDataContext
     {

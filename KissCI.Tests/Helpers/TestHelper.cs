@@ -11,7 +11,7 @@ using KissCI.Internal.Helpers;
 
 namespace KissCI.Tests.Helpers
 {
-    public static class ServiceHelper
+    public static class TestHelper
     {
         public static IProjectService GetService()
         {
@@ -44,11 +44,7 @@ namespace KissCI.Tests.Helpers
 
             var project = new Project("Test", "UI", tasks);
 
-            var service = new ProjectService(
-                outputDirectory,
-                new MainProjectFactory(copyTo),
-                () => new KissCI.NHibernate.NHibernateDataContext()
-            );
+            var service = ServiceHelper.GetService(outputDirectory);
 
             service.RegisterProject(project);
 

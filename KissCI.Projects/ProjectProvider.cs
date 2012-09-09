@@ -12,6 +12,7 @@ namespace KissCI.Projects
 {
     public class ProjectProvider : IProjectProvider
     {
+
         public IEnumerable<Project> Projects()
         {
             var current = DirectoryHelper.CurrentDirectory().Parent.Parent;

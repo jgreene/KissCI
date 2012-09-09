@@ -22,7 +22,7 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanGetProjects()
         {
-            using (var service = ServiceHelper.GetService())
+            using (var service = TestHelper.GetService())
             {
                 Assert.IsTrue(service.GetProjects().Any());
             }
@@ -37,7 +37,7 @@ namespace KissCI.Tests.Domain
             DirectoryHelper.CleanAndEnsureDirectory(writeTo);
             var file = Path.Combine(writeTo, "test.txt");
 
-            using (var service = ServiceHelper.GetService())
+            using (var service = TestHelper.GetService())
             {
                 var project = service.RunProject("WriteFileProject");
 
@@ -51,7 +51,7 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanCancelProject()
         {
-            using (var service = ServiceHelper.GetService())
+            using (var service = TestHelper.GetService())
             {
                 var project = "SleepProject";
                 service.RunProject(project);
@@ -68,7 +68,7 @@ namespace KissCI.Tests.Domain
         {
             DataHelper.InitDb();
 
-            using(var provider = new KissCI.NHibernate.NHibernateDataContext()){
+            using(var provider = new KissCI.Internal.NHibernate.NHibernateDataContext()){
                 var projectInfo = new ProjectInfo
                 {
                     ProjectName = "Project1",
@@ -100,7 +100,7 @@ namespace KissCI.Tests.Domain
                 provider.Commit();
             }
 
-            using (var service = ServiceHelper.GetService())
+            using (var service = TestHelper.GetService())
             {
                 var views = service.GetProjectViews();
 
@@ -113,7 +113,7 @@ namespace KissCI.Tests.Domain
         {
             DataHelper.InitDb();
 
-            using (var service = ServiceHelper.GetService())
+            using (var service = TestHelper.GetService())
             {
                 var projects = service.GetProjects();
                 var views = service.GetProjectViews();

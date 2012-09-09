@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
+using System.Configuration;
 
 namespace KissCI.Service
 {
@@ -18,9 +19,17 @@ namespace KissCI.Service
 
         public void Start(string[] args)
         {
-            var root = new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.FullName;
-            var webRoot = Path.Combine(root, "KissCI.Web");
-            using (var server = new CassiniDev.Server(38594, webRoot))
+            var root = new DirectoryInfo(Environment.CurrentDirectory).FullName;
+            var port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            var webPath = ConfigurationManager.AppSettings["WebPath"];
+            if (string.IsNullOrEmpty(webPath))
+                webPath = "KissCI.Web";
+
+            var webRoot = Path.IsPathRooted(webPath) ? webPath : Path.Combine(root, webPath);
+            var hostName = ConfigurationManager.AppSettings["HostName"];
+
+
+            using (var server = new CassiniDev.Server(port, "/", webRoot, IPAddress.Any, hostName))
             {
                 server.Start();
 

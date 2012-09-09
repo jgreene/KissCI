@@ -7,10 +7,28 @@
 <h4>@Model.Info.Category</h4>
 <h1>@Model.Info.ProjectName</h1>
 
+<div>
+    @if (Model.Build.BuildResult.HasValue)
+    {
+        if (Model.Build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Success)
+        {
+            <h3 class="text-success">Success</h3>
+        }
+        else if (Model.Build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Failure)
+        {
+            <h3 class="text-error">Failure</h3>
+        }
+        else if (Model.Build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Cancelled)
+        {
+            <h3 class="text-warning">Cancelled</h3>
+        }
+    }
+
+</div>
+
 <div class="span12">
-    
+    <h5>Summary</h5>
     <table class="table table-condensed">
-        <caption>Summary</caption>
         <thead>
             <tr>
                 <th></th>
@@ -30,8 +48,8 @@
     </table>
 
     <div class="log">
+        <h5>Log</h5>
         <fieldset>
-            <legend>Log</legend>
         @{ 
             using(var reader = File.OpenText(Model.Build.LogFile)){
                 string line;
