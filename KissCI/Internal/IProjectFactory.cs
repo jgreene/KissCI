@@ -1,4 +1,6 @@
-﻿using KissCI.Triggers;
+﻿using KissCI.Helpers;
+using KissCI.Internal.Helpers;
+using KissCI.Triggers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,9 +17,11 @@ namespace KissCI.Internal
 
     public class MainProjectFactory : IProjectFactory
     {
+
         public MainProjectFactory(string directory)
         {
             _directory = directory;
+            DirectoryHelper.EnsureDirectories(_directory);
             _watcher = new FileSystemWatcher(_directory);
             _watcher.Changed += _watcher_Changed;
             _watcher.Created += _watcher_Changed;

@@ -17,7 +17,7 @@ namespace KissCI.Tests.Tasks
         [TestMethod]
         public void CanRunTestProject()
         {
-            var executableDirectory = DirectoryHelper.CurrentDirectory();
+            var executableDirectory = DirectoryHelper.ExecutingDirectory();
 
             var outputDirectory = Path.Combine(executableDirectory.FullName, "TestOutput");
             var testDll = Path.Combine(executableDirectory.FullName, "KissCI.Tests.FakeTests.dll");

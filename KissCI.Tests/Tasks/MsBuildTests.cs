@@ -18,13 +18,13 @@ namespace KissCI.Tests.Tasks
         [TestMethod]
         public void CanBuildKissCI()
         {
-            var executableDirectory = DirectoryHelper.CurrentDirectory();
+            var executableDirectory = DirectoryHelper.ExecutingDirectory();
 
             var outputDirectory = Path.Combine(executableDirectory.FullName, "BuildOutput");
 
             DirectoryHelper.CleanAndEnsureDirectory(outputDirectory);
 
-            var flintRoot = DirectoryHelper.FlintCIRoot();
+            var flintRoot = TestHelper.FlintCIRoot();
             var flintProject = Path.Combine(flintRoot.FullName, "KissCI", "KissCI.csproj");
 
             var tasks = TaskHelper.Start()

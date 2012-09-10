@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildTask.cs" />
+    <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="Internal\Domain\IProjectBuildService.cs" />

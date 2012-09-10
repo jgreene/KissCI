@@ -31,7 +31,7 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanRunProject()
         {
-            var current = DirectoryHelper.CurrentDirectory();
+            var current = DirectoryHelper.ExecutingDirectory();
             var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");
 
             DirectoryHelper.CleanAndEnsureDirectory(writeTo);

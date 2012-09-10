@@ -43,7 +43,7 @@ namespace KissCI.Projects
             .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Web", "KissCI.Web.csproj"), "Debug")
             .AddStep((ctx, arg) =>
             {
-                return new RobocopyArgs(arg.OutputPath, outputWebTo);
+                return new RobocopyArgs(Path.Combine(arg.OutputPath, "_PublishedWebsites", "KissCI.Web"), outputWebTo);
             })
             .Robocopy()
             .Finalize();

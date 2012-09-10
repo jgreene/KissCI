@@ -17,7 +17,7 @@ namespace KissCI.Tests.Tasks
         [TestMethod]
         public void CanRobocopy()
         {
-            var executableDirectory = DirectoryHelper.CurrentDirectory();
+            var executableDirectory = DirectoryHelper.ExecutingDirectory();
 
             var outputDirectory = Path.Combine(executableDirectory.FullName, "Robo");
 

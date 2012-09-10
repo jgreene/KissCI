@@ -19,7 +19,7 @@ namespace KissCI.Tests.DataProviders
         [TestMethod]
         public void CanWriteAndReadMessages()
         {
-            var executableDirectory = DirectoryHelper.CurrentDirectory();
+            var executableDirectory = DirectoryHelper.ExecutingDirectory();
             var outputDirectory = Path.Combine(executableDirectory.FullName, "MessageService");
 
             DirectoryHelper.CleanAndEnsureDirectory(outputDirectory);
