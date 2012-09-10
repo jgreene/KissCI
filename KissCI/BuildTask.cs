@@ -66,6 +66,11 @@ namespace KissCI
                 ctx.Commit();
             }
         }
+
+        public void Log(string message)
+        {
+            _logger.Log(message);
+        }
         
         public void Log(string format, params object[] parameters)
         {

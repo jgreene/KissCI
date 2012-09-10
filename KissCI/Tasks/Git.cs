@@ -32,7 +32,7 @@ namespace KissCI.Tasks
         {
             var args = string.Format("\"{0}\" \"{1}\"", arg.RepositoryUrl, arg.OutputDirectory);
 
-            return string.Format("checkout {0}", args);
+            return string.Format("clone {0}", args);
         }
 
         static string GetUpdateArgs(GitArgs arg)

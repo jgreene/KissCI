@@ -175,12 +175,16 @@ namespace KissCI.Internal.Domain
                             && m.ProjectBuildId == lastBuild.Id
                             );
 
+                    var project = GetProject(i.ProjectName);
+
+                    DateTime? nextBuildTime = project == null ? null : project.Triggers.OrderBy(t => t.NextBuild).Select(t => t.NextBuild).FirstOrDefault();
+
                     var view = new ProjectView
                     {
                         Info = i,
                         LastBuild = lastBuild,
                         LastMessage = lastMessage,
-                        NextBuildTime = GetProject(i.ProjectName).Triggers.OrderBy(t=>t.NextBuild).Select(t=>t.NextBuild).FirstOrDefault()
+                        NextBuildTime = nextBuildTime
                     };
                     views.Add(view);
                 }

@@ -11,6 +11,7 @@ namespace KissCI.Internal
 {
     public interface ILogger
     {
+        void Log(string message);
         void Log(string format, params object[] parameters);
     }
 
@@ -18,6 +19,12 @@ namespace KissCI.Internal
     {
         public class ConsoleLogger : ILogger
         {
+            public void Log(string message)
+            {
+                var dateTime = TimeHelper.Now;
+                Console.WriteLine(dateTime.ToString() + " : " + message);
+            }
+
             public void Log(string format, params object[] parameters)
             {
                 var dateTime = TimeHelper.Now;
@@ -35,6 +42,12 @@ namespace KissCI.Internal
 
             readonly ProjectBuild _build;
             readonly StreamWriter _writer;
+
+            public void Log(string message)
+            {
+                var now = TimeHelper.Now;
+                _writer.WriteLine(now.ToString() + " : " + message);
+            }
 
             public void Log(string format, params object[] parameters)
             {

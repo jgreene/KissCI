@@ -24,22 +24,23 @@ namespace KissCI.Projects
         {
             var root = @"C:\Projects\Builds\";
             var sourceRoot = Path.Combine(root, "Source");
+            var sourceOutput = Path.Combine(sourceRoot, "KissCI");
             var tempRoot = Path.Combine(root, "TempDirectories");
             var outputDir = Path.Combine(root, "BuildOutput");
             var outputTo = Path.Combine(outputDir, "KissCI.Service");
             var outputWebTo = Path.Combine(outputTo, "KissCI.Web");
 
-            EnsureDirectories(root, sourceRoot, tempRoot, outputDir, outputTo, outputWebTo);
+            EnsureDirectories(root, sourceRoot, sourceOutput, tempRoot, outputDir, outputTo, outputWebTo);
 
             var serviceTask = TaskHelper.Start()
-            .Git("https://github.com/jgreene/KissCI.git", sourceRoot)
-            .TempMsBuild4_0(tempRoot, Path.Combine(sourceRoot, "KissCI.Service", "KissCI.Service.csproj"), "Debug")
+            .Git("git://github.com/jgreene/KissCI.git", sourceOutput)
+            .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Service", "KissCI.Service.csproj"), "Debug")
             .AddStep((ctx, arg) =>
             {
                 return new RobocopyArgs(arg.OutputPath, outputTo);
             })
             .Robocopy()
-            .TempMsBuild4_0(tempRoot, Path.Combine(sourceRoot, "KissCI.Web", "KissCI.Web.csproj"), "Debug")
+            .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Web", "KissCI.Web.csproj"), "Debug")
             .AddStep((ctx, arg) =>
             {
                 return new RobocopyArgs(arg.OutputPath, outputWebTo);
@@ -110,7 +111,7 @@ namespace KissCI.Projects
             })
             .Finalize();
 
-            foreach(var p in Enumerable.Range(1, 50))
+            foreach(var p in Enumerable.Range(1, 5))
                 yield return new Project("Project" + p.ToString(), "UI", tasks);
         }
     }
