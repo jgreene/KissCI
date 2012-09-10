@@ -30,16 +30,12 @@ namespace KissCI.Tasks
 
         static string GetCheckoutArgs(GitArgs arg)
         {
-            var args = string.Format("\"{0}\" \"{1}\"", arg.RepositoryUrl, arg.OutputDirectory);
-
-            return string.Format("clone {0}", args);
+            return string.Format("clone \"{0}\" \"{1}\"", arg.RepositoryUrl, arg.OutputDirectory);
         }
 
         static string GetUpdateArgs(GitArgs arg)
         {
-            var args = string.Format("remote update \"{0}\"", arg.OutputDirectory);
-
-            return args;
+            return string.Format("--git-dir=\"{0}\\.git\" remote update", arg.OutputDirectory);
         }
 
         public static BuildTask<TArg, GitResult> Git<TArg>(this BuildTask<TArg, GitArgs> t)

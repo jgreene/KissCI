@@ -54,7 +54,7 @@ namespace KissCI.Tasks
 
                     proc.WaitForExit();
 
-                    if (proc.ExitCode != 1)
+                    if (proc.ExitCode > 3)
                     {
                         throw new Exception(string.Format("Robocopy failed copy from: {0} to: {1} with an exit code of: {2}", arg.SourceDirectory, arg.DestinationDirectory, proc.ExitCode));
                     }

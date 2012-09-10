@@ -73,7 +73,7 @@
                     <td></td>
                 }
                 
-                <td>@project.LastBuild.BuildTime.ToString()</td>
+                <td>@Html.ActionLink(project.LastBuild.BuildTime.ToString(), "Log", new{ id = project.LastBuild.Id })</td>
             }
             else
             {
