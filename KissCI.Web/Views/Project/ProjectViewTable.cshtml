@@ -83,7 +83,7 @@
             <td>@Html.Encode(project.NextBuildTime.HasValue ? project.NextBuildTime.Value.ToString() : "")</td>
             <td>@project.Info.Status.ToString()</td>
             <td>@project.Info.Activity.ToString()</td>
-            <td>@Html.Encode(project.LastMessage == null ? "" : project.LastMessage.Message)</td>
+            <td>@Html.Raw(project.LastMessage == null ? "" : string.Join("", project.LastMessage.Message.Take(300).ToArray()))</td>
             
         </tr>
     }

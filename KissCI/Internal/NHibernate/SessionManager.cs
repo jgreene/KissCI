@@ -59,7 +59,9 @@ namespace KissCI.NHibernate.Internal
                             m.FluentMappings.Add<ProjectInfoMap>();
                             m.FluentMappings.Add<ProjectBuildMap>();
                             m.FluentMappings.Add<TaskMessageMap>();
-                        }).BuildConfiguration();
+                        })
+                        .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
+                        .BuildConfiguration();
 
             return _config;
         }

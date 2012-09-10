@@ -40,7 +40,7 @@
             {
                 <tr>
                     <td>@msg.Time.ToString()</td>
-                    <td>@msg.Message</td>
+                    <td>@Html.Raw(msg.Message)</td>
                 </tr>
                 
             }
@@ -54,7 +54,7 @@
             using(var reader = File.OpenText(Model.Build.LogFile)){
                 string line;
                 while((line = reader.ReadLine()) != null){
-                    <div>@line</div>
+                    <div>@Html.Raw(line)</div>
                 }
             }
         }
