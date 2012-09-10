@@ -35,7 +35,7 @@ namespace KissCI.Tasks
 
         static string GetUpdateArgs(GitArgs arg)
         {
-            return string.Format("--git-dir=\"{0}\\.git\" pull", arg.OutputDirectory);
+            return string.Format("--git-dir=\"{0}\\.git\" remote update", arg.OutputDirectory);
         }
 
         public static BuildTask<TArg, GitResult> Git<TArg>(this BuildTask<TArg, GitArgs> t)
