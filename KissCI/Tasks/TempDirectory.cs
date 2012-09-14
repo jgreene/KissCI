@@ -26,11 +26,9 @@ namespace KissCI.Tasks
             _directoryPath = Create();
         }
 
-        
-
-        string _rootDirectory;
-        string _prefix;
-        string _directoryPath;
+        readonly string _rootDirectory;
+        readonly string _prefix;
+        readonly string _directoryPath;
 
         public string RootDirectory { get { return _rootDirectory; } }
         public string Prefix { get { return _prefix; } }

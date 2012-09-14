@@ -29,8 +29,6 @@ namespace KissCI.Web
 
 
             var projectRoot = Server.MapPath("~/KissCI");
-            SessionManager.SetRoot(projectRoot);
-            SessionManager.InitDb();
             StructuremapMvc.RegisterIoc(projectRoot);
         }
 

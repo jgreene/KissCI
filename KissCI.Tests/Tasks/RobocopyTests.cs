@@ -14,6 +14,12 @@ namespace KissCI.Tests.Tasks
     [TestClass]
     public class RobocopyTests
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            DataHelper.CleanDb();
+        }
+
         [TestMethod]
         public void CanRobocopy()
         {
@@ -44,6 +50,7 @@ namespace KissCI.Tests.Tasks
 
             using (var projectService = TestHelper.GetService())
             {
+                projectService.RegisterProject(project);
                 ProjectHelper.Run(project, projectService);
             }
         }

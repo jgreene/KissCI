@@ -14,45 +14,44 @@ namespace KissCI.NHibernate.Internal
 {
     public static class SessionManager
     {
-        public static void SetRoot(string rootDirectory){
-            _rootDirectory = rootDirectory;
+
+        static IDictionary<string, Configuration> _configs = new Dictionary<string, Configuration>();
+        static IDictionary<string, ISessionFactory> _factories = new Dictionary<string, ISessionFactory>();
+
+        static string GetDbFile(string root)
+        {
+            return Path.Combine(root, "KissCI.db3");
         }
 
-        static string _rootDirectory = "";
-
-        static string GetConnectionString()
+        static string GetConnectionString(string root)
         {
-            var baseConn = System.Configuration.ConfigurationManager.ConnectionStrings["KissCIConnection"].ConnectionString;
-            if (string.IsNullOrEmpty(_rootDirectory) == false)
-                baseConn = baseConn.Replace("{AppDir}", _rootDirectory);
-            else
-                baseConn = baseConn.Replace("{AppDir}\\", "");
-            return baseConn;
-        }
-        
-        
-        static ISessionFactory _factory;
-        public static ISessionFactory SessionFactory
-        {
-            get { 
-                if(_factory != null)
-                    return _factory;
-
-                _factory = GetConfig().BuildSessionFactory();
-
-                return _factory;
-            }
+            return string.Format("Data Source={0};Version=3;New=True;FailIfMissing=False", GetDbFile(root));
         }
 
-        static Configuration _config;
-        static Configuration GetConfig()
+        static ISessionFactory GetFactory(string root)
         {
-            if (_config != null)
-                return _config;
+            if (_factories.ContainsKey(root))
+                return _factories[root];
 
-            _config = Fluently.Configure()
+            var config = GetConfig(root);
+
+            var fact = config.BuildSessionFactory();
+
+            _factories.Add(root, fact);
+
+            return fact;
+        }
+
+        static Configuration GetConfig(string root)
+        {
+            if (_configs.ContainsKey(root))
+                return _configs[root];
+
+            var connectionString = GetConnectionString(root);
+
+            var config = Fluently.Configure()
                         .Database(
-                            SQLiteConfiguration.Standard.ConnectionString(GetConnectionString())
+                            SQLiteConfiguration.Standard.ConnectionString(connectionString)
                         )
                         .Mappings(m =>
                         {
@@ -60,20 +59,36 @@ namespace KissCI.NHibernate.Internal
                             m.FluentMappings.Add<ProjectBuildMap>();
                             m.FluentMappings.Add<TaskMessageMap>();
                         })
-                        .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(true, true))
+                        .ExposeConfiguration(cfg => {
+                            var filePath = GetDbFile(root);
+                            if (File.Exists(filePath) == false)
+                            {
+                                using (var file = File.Create(filePath)) { }
+                                new SchemaUpdate(cfg).Execute(false, true);
+                                //new SchemaExport(cfg).Execute(false, true, true);
+                            }else{
+                                new SchemaUpdate(cfg).Execute(false, true);
+                            }
+                            
+                        })
                         .BuildConfiguration();
 
-            return _config;
+            _configs.Add(root, config);
+
+            return config;
         }
 
-        public static void InitDb()
+        public static void Clear()
         {
-            new SchemaUpdate(GetConfig()).Execute(true, true);
+            _configs.Clear();
+            _factories.Clear();
         }
 
-        public static ISession GetSession()
+        public static ISession GetSession(string root)
         {
-            var sess = SessionFactory.OpenSession();
+            var factory = GetFactory(root);
+
+            var sess = factory.OpenSession();
             sess.FlushMode = FlushMode.Commit;
             sess.BeginTransaction();
 

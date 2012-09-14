@@ -14,6 +14,12 @@ namespace KissCI.Tests.Tasks
     [TestClass]
     public class TempDirectoryTests
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            DataHelper.CleanDb();
+        }
+
         [TestMethod]
         public void CanCreateTempDirectory()
         {
@@ -34,6 +40,7 @@ namespace KissCI.Tests.Tasks
 
             using (var projectService = TestHelper.GetService())
             {
+                projectService.RegisterProject(project);
                 ProjectHelper.Run(project, projectService);
             }
             

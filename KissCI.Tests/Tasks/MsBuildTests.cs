@@ -1,5 +1,6 @@
 ﻿using KissCI.Helpers;
 using KissCI.Internal.Helpers;
+using KissCI.NHibernate.Internal;
 using KissCI.Tasks;
 using KissCI.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,6 +16,12 @@ namespace KissCI.Tests.Tasks
     [TestClass]
     public class MsBuildTests
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            DataHelper.CleanDb();
+        }
+
         [TestMethod]
         public void CanBuildKissCI()
         {

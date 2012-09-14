@@ -17,7 +17,11 @@ namespace KissCI.Tests.Domain
     [TestClass]
     public class ProjectServiceTests
     {
-        
+        [TestInitialize]
+        public void Setup()
+        {
+            DataHelper.CleanDb();
+        }
 
         [TestMethod]
         public void CanGetProjects()
@@ -66,9 +70,8 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanGetProjectViews()
         {
-            DataHelper.InitDb();
-
-            using(var provider = new KissCI.Internal.NHibernate.NHibernateDataContext()){
+            using (var provider = DataHelper.OpenContext())
+            {
                 var projectInfo = new ProjectInfo
                 {
                     ProjectName = "Project1",
@@ -111,7 +114,6 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void ProjectInfoExistsPerTask()
         {
-            DataHelper.InitDb();
 
             using (var service = TestHelper.GetService())
             {

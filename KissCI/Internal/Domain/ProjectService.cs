@@ -30,6 +30,16 @@ namespace KissCI.Internal.Domain
         void StartProject(string projectName);
     }
 
+    public class MainProjectService : ProjectService
+    {
+        public MainProjectService(string root) : base(root, 
+            new MainProjectFactory(Path.Combine(root, "Projects")), 
+            () => new NHibernate.NHibernateDataContext(root))
+        {
+            
+        }
+    }
+
     public class ProjectService : IProjectService
     {
         public ProjectService(string directoryRoot, IProjectFactory factory, Func<IDataContext> dataProvider)

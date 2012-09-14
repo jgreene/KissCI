@@ -15,8 +15,11 @@ namespace KissCI.Tests.Helpers
     {
         public static IProjectService GetService()
         {
+            DataHelper.CleanDb();
+
             var executableDirectory = DirectoryHelper.ExecutingDirectory();
-            var outputDirectory = Path.Combine(executableDirectory.FullName, "ServiceTests");
+            //var outputDirectory = Path.Combine(executableDirectory.FullName, "ServiceTests");
+            var outputDirectory = executableDirectory.FullName;
 
             var copyTo = Path.Combine(outputDirectory, "Projects");
             DirectoryHelper.EnsureDirectory(copyTo);
@@ -44,13 +47,13 @@ namespace KissCI.Tests.Helpers
 
             var project = new Project("Test", "UI", tasks);
 
-            var service = ServiceHelper.GetService(outputDirectory);
+            using (var tempService = ServiceHelper.GetService(outputDirectory))
+            {
+                tempService.RegisterProject(project);
+                ProjectHelper.Run(project, tempService);
+            }            
 
-            service.RegisterProject(project);
-
-            ProjectHelper.Run(project, service);
-
-            return service;
+            return ServiceHelper.GetService(outputDirectory);
         }
 
         public static DirectoryInfo FlintCIRoot()

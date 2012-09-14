@@ -12,14 +12,7 @@ namespace KissCI.Helpers
     {
         public static IProjectService GetService(string root)
         {
-            var projectDir = Path.Combine(root, "Projects");
-            var service = new ProjectService(
-                root,
-                new MainProjectFactory(projectDir),
-                () => new KissCI.Internal.NHibernate.NHibernateDataContext()
-            );
-
-            return service;
+            return new MainProjectService(root);
         }
     }
 }

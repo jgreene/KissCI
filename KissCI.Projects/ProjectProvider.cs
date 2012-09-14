@@ -34,6 +34,11 @@ namespace KissCI.Projects
 
             var serviceTask = TaskHelper.Start()
             .Git("git://github.com/jgreene/KissCI.git", sourceOutput)
+            .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Tests", "KissCI.Tests.csproj"), "Debug")
+            .AddStep((ctx, arg) => {
+                return new MsTestArgs(Path.Combine(arg.OutputPath, "KissCI.Tests.dll"), Path.Combine(arg.OutputPath, "results.trx"));
+            })
+            .MsTest()
             .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Service", "KissCI.Service.csproj"), "Debug")
             .AddStep((ctx, arg) =>
             {
@@ -62,7 +67,7 @@ namespace KissCI.Projects
         {
             yield return GetServiceProject();
 
-            var current = DirectoryHelper.CurrentDirectory().Parent.Parent;
+            var current = DirectoryHelper.CurrentDirectory().Parent;
 
             var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");
 

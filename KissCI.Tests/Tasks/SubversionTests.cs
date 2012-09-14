@@ -14,6 +14,12 @@ namespace KissCI.Tests.Tasks
     [TestClass]
     public class SubversionTests
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            DataHelper.CleanDb();
+        }
+
         [TestMethod]
         public void CanCheckoutProject()
         {
@@ -29,6 +35,8 @@ namespace KissCI.Tests.Tasks
 
             using (var projectService = TestHelper.GetService())
             {
+                projectService.RegisterProject(project);
+
                 ProjectHelper.Run(project, projectService);
 
                 var output = new DirectoryInfo(outputDirectory);

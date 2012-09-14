@@ -15,54 +15,16 @@ namespace KissCI.Tests.DataProviders
     [TestClass]
     public class NHibernateDataContextTests
     {
-
-        [TestMethod]
-        public void CanWriteAndReadMessages()
+        [TestInitialize]
+        public void Setup()
         {
-            var executableDirectory = DirectoryHelper.ExecutingDirectory();
-            var outputDirectory = Path.Combine(executableDirectory.FullName, "MessageService");
-
-            DirectoryHelper.CleanAndEnsureDirectory(outputDirectory);
-            DataHelper.InitDb();
-
-
-            using (var dataProvider = DataHelper.OpenContext())
-            {
-                var service = dataProvider.TaskMessageService;
-
-                var message1 = new TaskMessage
-                {
-                    Time = TimeHelper.Now,
-                    ProjectBuildId = 0,
-                    Message = "This is a test message"
-                };
-
-                var message2 = new TaskMessage
-                {
-                    Time = TimeHelper.Now,
-                    ProjectBuildId = 0,
-                    Message = "This is a test message"
-                };
-
-                service.WriteMessage(message1);
-                service.WriteMessage(message2);
-
-                var messages = service.GetMessages();
-
-                var count = messages.Count();
-
-                Assert.IsTrue(count == 2);
-
-                var read = messages.First();
-                Assert.AreEqual(message1.Message, read.Message);
-            }
+            DataHelper.CleanDb();
         }
 
         [TestMethod]
         public void CanSaveProjectInfo()
         {
-            SessionManager.InitDb();
-            using (var ctx = new KissCI.Internal.NHibernate.NHibernateDataContext())
+            using (var ctx = DataHelper.OpenContext())
             {
 
                 var srv = ctx.ProjectInfoService;
@@ -83,8 +45,7 @@ namespace KissCI.Tests.DataProviders
         [TestMethod]
         public void CanSaveProjectBuild()
         {
-            SessionManager.InitDb();
-            using (var ctx = new KissCI.Internal.NHibernate.NHibernateDataContext())
+            using (var ctx = DataHelper.OpenContext())
             {
 
                 var srv = ctx.ProjectBuildService;

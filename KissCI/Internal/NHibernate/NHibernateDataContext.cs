@@ -13,9 +13,9 @@ namespace KissCI.Internal.NHibernate
 {
     public class NHibernateDataContext : IDataContext
     {
-        public NHibernateDataContext()
+        public NHibernateDataContext(string root)
         {
-            _session = SessionManager.GetSession();
+            _session = SessionManager.GetSession(root);
         }
 
         readonly ISession _session;

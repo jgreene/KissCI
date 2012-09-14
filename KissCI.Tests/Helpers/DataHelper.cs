@@ -1,4 +1,5 @@
-﻿using KissCI.Internal;
+﻿using KissCI.Helpers;
+using KissCI.Internal;
 using KissCI.NHibernate.Internal;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,17 @@ namespace KissCI.Tests.Helpers
 {
     public static class DataHelper
     {
-        public static void InitDb()
+        public static void CleanDb()
         {
-            File.Delete("KissCI.db3");
-            SessionManager.InitDb();
+            var executableDirectory = DirectoryHelper.ExecutingDirectory();
+            var dbPath = Path.Combine(executableDirectory.FullName, "KissCI.db3");
+            File.Delete(dbPath);
+            SessionManager.Clear();
         }
 
         public static IDataContext OpenContext()
         {
-            return new KissCI.Internal.NHibernate.NHibernateDataContext();
+            return TestHelper.GetService().OpenContext();
         }
     }
 }
