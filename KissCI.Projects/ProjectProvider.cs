@@ -33,7 +33,7 @@ namespace KissCI.Projects
             EnsureDirectories(root, sourceRoot, sourceOutput, tempRoot, outputDir, outputTo, outputWebTo);
 
             var serviceTask = TaskHelper.Start()
-            .Git("git://github.com/jgreene/KissCI.git", sourceOutput)
+            .Git("file://C:/Projects/Builds/KissCI", sourceOutput)
             .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Tests", "KissCI.Tests.csproj"), "Debug")
             .AddStep((ctx, arg) => {
                 return new MsTestArgs(Path.Combine(arg.OutputPath, "KissCI.Tests.dll"), Path.Combine(arg.OutputPath, "results.trx"));
