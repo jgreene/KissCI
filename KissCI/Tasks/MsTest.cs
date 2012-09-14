@@ -9,17 +9,21 @@ namespace KissCI.Tasks
 {
     public class MsTestArgs
     {
-        public MsTestArgs(string assemblyPath, string resultsFile)
+        public MsTestArgs(string assemblyPath, string resultsFile, string testConfig = null)
         {
             _assemblyPath = assemblyPath;
             _resultsFile = resultsFile;
+            _testConfig = testConfig;
         }
 
         string _assemblyPath;
         string _resultsFile;
+        string _testConfig;
 
         public string AssemblyPath { get { return _assemblyPath; } }
         public string ResultsFile { get { return _resultsFile; } }
+
+        public string TestConfig { get { return _testConfig; } }
     }
 
     public class MsTestResult
@@ -50,11 +54,11 @@ namespace KissCI.Tasks
             return _msTestPath;
         }
 
-        public static BuildTask<TArg, MsTestResult> MsTest<TArg, TResult>(this BuildTask<TArg, TResult> t, string assemblyPath, string resultsFile)
+        public static BuildTask<TArg, MsTestResult> MsTest<TArg, TResult>(this BuildTask<TArg, TResult> t, string assemblyPath, string resultsFile, string testConfig = null)
         {
             return t.AddStep((ctx, arg) =>
             {
-                return new MsTestArgs(assemblyPath, resultsFile);
+                return new MsTestArgs(assemblyPath, resultsFile, testConfig);
             }).MsTest();
         }
 
@@ -62,7 +66,13 @@ namespace KissCI.Tasks
         {
             return t.AddTask("MsTest", (ctx, arg) =>
             {
-                var args = string.Format("/testcontainer:{0} /resultsfile:{1} /detail:errormessage /detail:errorstacktrace", arg.AssemblyPath, arg.ResultsFile);
+                var testConfig = string.IsNullOrEmpty(arg.TestConfig) ? "" : string.Format("/runconfig:{0}", arg.TestConfig);
+
+
+                var args = string.Format("/detail:errormessage /detail:errorstacktrace /testcontainer:{0} /resultsfile:{1} {2}", 
+                    arg.AssemblyPath, 
+                    arg.ResultsFile,
+                    testConfig);
 
                 ctx.Log("Begin MsTest on: {0} and output to: {1}", arg.AssemblyPath, arg.ResultsFile);
 

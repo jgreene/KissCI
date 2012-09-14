@@ -36,7 +36,10 @@ namespace KissCI.Projects
             .Git("file://C:/Projects/Builds/KissCI", sourceOutput)
             .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Tests", "KissCI.Tests.csproj"), "Debug")
             .AddStep((ctx, arg) => {
-                return new MsTestArgs(Path.Combine(arg.OutputPath, "KissCI.Tests.dll"), Path.Combine(arg.OutputPath, "results.trx"));
+                return new MsTestArgs(
+                    Path.Combine(arg.OutputPath, "KissCI.Tests.dll"), 
+                    Path.Combine(arg.OutputPath, "results.trx"), 
+                    Path.Combine(sourceRoot, "KissCI.testsettings"));
             })
             .MsTest()
             .TempMsBuild4_0(tempRoot, Path.Combine(sourceOutput, "KissCI.Service", "KissCI.Service.csproj"), "Debug")
