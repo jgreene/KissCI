@@ -10,7 +10,7 @@ namespace KissCI.Helpers
     {
         public static DirectoryInfo ExecutingDirectory()
         {
-            return new DirectoryInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+            return new DirectoryInfo(Path.GetDirectoryName(typeof(DirectoryHelper).Assembly.Location));
         }
 
         public static void EnsureDirectory(string directory) { EnsureDirectories(directory); }
