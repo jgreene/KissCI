@@ -24,34 +24,13 @@ namespace KissCI.Tests.Helpers
             var copyTo = Path.Combine(outputDirectory, "Projects");
             DirectoryHelper.EnsureDirectory(copyTo);
 
-            var projectsDirectory = Path.Combine(executableDirectory.Parent.Parent.Parent.FullName, "KissCI.Projects");
-            var projectFile = Path.Combine(projectsDirectory, "KissCI.Projects.csproj");
+            var projectsFile = "KissCI.Projects.dll";
 
-            var tasks = TaskHelper.Start()
-            .CreateTempDirectory(outputDirectory)
-            .AddStep((ctx, arg) =>
+            try
             {
-                return new MsBuildArgs(projectFile, arg.Path, "Debug");
-            })
-            .MsBuild4_0()
-            .AddTask("Copy assembly", (ctx, arg) =>
-            {
-                try
-                {
-                    File.Copy(Path.Combine(arg.OutputPath, "KissCI.Projects.dll"), Path.Combine(copyTo, "KissCI.Projects.dll"), true);
-                }
-                catch { }
-                return true;
-            })
-            .Finalize();
-
-            var project = new Project("Test", "UI", tasks);
-
-            using (var tempService = ServiceHelper.GetService(outputDirectory))
-            {
-                tempService.RegisterProject(project);
-                ProjectHelper.Run(project, tempService);
-            }            
+                File.Copy(Path.Combine(outputDirectory, projectsFile), Path.Combine(copyTo, projectsFile));
+            }
+            catch { }
 
             return ServiceHelper.GetService(outputDirectory);
         }
