@@ -3,6 +3,7 @@
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
     <DeploymentItem filename="KissCI\x86\SQLite.Interop.dll" />
+    <DeploymentItem filename="KissCI.Tests.FakeTests\bin\Debug\KissCI.Tests.FakeTests.dll" />
     <DeploymentItem filename="KissCI\x86\" />
     <DeploymentItem filename="KissCI\x64\" />
     <DeploymentItem filename="KissCI\x64\SQLite.Interop.dll" />
