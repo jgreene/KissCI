@@ -60,7 +60,7 @@ namespace KissCI.Tasks
             {
                 var targetArg = !string.IsNullOrEmpty(arg.Target) ? "target:" + arg.Target : "";
                 var warningArg = arg.WarningLevel.HasValue ? string.Format("/property:WarningLevel={0}", arg.WarningLevel.Value) : "";
-                var outputArg = string.Format(@"/p:OutDir={0}\ /p:OutputPath=bin\", arg.OutputPath);
+                var outputArg = string.Format("/p:OutDir=\"{0}\" /p:OutputPath=bin\\", arg.OutputPath);
                 var configurationArg = string.Format("/p:Configuration={0}", arg.Configuration);
                 var projectArg = arg.ProjectFile;
 
