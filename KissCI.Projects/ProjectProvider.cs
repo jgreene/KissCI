@@ -70,7 +70,7 @@ namespace KissCI.Projects
         {
             yield return GetServiceProject();
 
-            var current = DirectoryHelper.CurrentDirectory();
+            var current = DirectoryHelper.CurrentDirectory().Parent;
 
             var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");
 

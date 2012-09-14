@@ -15,13 +15,6 @@ namespace KissCI.Projects
             return new DirectoryInfo(Path.GetDirectoryName(typeof(DirectoryHelper).Assembly.Location));
         }
 
-        public static DirectoryInfo FlintCIRoot()
-        {
-            var current = CurrentDirectory();
-
-            return current.Parent.Parent.Parent;
-        }
-
         public static void EnsureDirectory(string directory)
         {
             if (Directory.Exists(directory) == false)
