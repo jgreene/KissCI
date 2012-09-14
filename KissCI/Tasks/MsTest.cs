@@ -66,10 +66,10 @@ namespace KissCI.Tasks
         {
             return t.AddTask("MsTest", (ctx, arg) =>
             {
-                var testConfig = string.IsNullOrEmpty(arg.TestConfig) ? "" : string.Format("/runconfig:{0}", arg.TestConfig);
+                var testConfig = string.IsNullOrEmpty(arg.TestConfig) ? "" : string.Format("/runconfig:\"{0}\"", arg.TestConfig);
 
 
-                var args = string.Format("/detail:errormessage /detail:errorstacktrace /testcontainer:{0} /resultsfile:{1} {2}", 
+                var args = string.Format("/detail:errormessage /detail:errorstacktrace /testcontainer:\"{0}\" /resultsfile:\"{1}\" {2}", 
                     arg.AssemblyPath, 
                     arg.ResultsFile,
                     testConfig);
