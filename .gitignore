@@ -57,8 +57,5 @@ _ReSharper*/
 # visual studio database projects
 *.dbmdl
 
-#Test files
-*.testsettings
-
 
 KissCI.Web/KissCI/
