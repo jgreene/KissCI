@@ -112,7 +112,7 @@ namespace KissCI.Tests.Domain
         }
 
         [TestMethod]
-        public void ProjectInfoExistsPerTask()
+        public void ProjectInfoExistsPerProject()
         {
 
             using (var service = TestHelper.GetService())
