@@ -56,7 +56,7 @@ namespace KissCI.Tasks
     
         public void Dispose()
         {
-            Directory.Delete(_directoryPath, true);
+            //Directory.Delete(_directoryPath, true);
         }
     }
 

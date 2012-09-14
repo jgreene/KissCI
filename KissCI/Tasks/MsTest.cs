@@ -62,7 +62,7 @@ namespace KissCI.Tasks
         {
             return t.AddTask("MsTest", (ctx, arg) =>
             {
-                var args = string.Format("/testcontainer:{0} /resultsfile:{1}", arg.AssemblyPath, arg.ResultsFile);
+                var args = string.Format("/testcontainer:{0} /resultsfile:{1} /detail:errormessage /detail:errorstacktrace", arg.AssemblyPath, arg.ResultsFile);
 
                 ctx.Log("Begin MsTest on: {0} and output to: {1}", arg.AssemblyPath, arg.ResultsFile);
 
