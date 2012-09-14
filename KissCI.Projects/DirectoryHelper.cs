@@ -11,7 +11,7 @@ namespace KissCI.Projects
     {
         public static DirectoryInfo CurrentDirectory()
         {
-            return new DirectoryInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+            return new DirectoryInfo(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
         }
 
         public static DirectoryInfo FlintCIRoot()
