@@ -70,41 +70,42 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanGetProjectViews()
         {
-            using (var provider = DataHelper.OpenContext())
-            {
-                var projectInfo = new ProjectInfo
-                {
-                    ProjectName = "Project1",
-                    Status = Status.Running,
-                    Activity = Activity.Building
-                };
-
-                provider.ProjectInfoService.Save(projectInfo);
-
-                var projectBuild = new ProjectBuild
-                {
-                    ProjectInfoId = projectInfo.Id,
-                    BuildTime = TimeHelper.Now,
-                    LogFile = "build.txt"
-                };
-
-                provider.ProjectBuildService.Save(projectBuild);
-
-                var message = new TaskMessage
-                {
-                    ProjectInfoId = projectInfo.Id,
-                    ProjectBuildId = projectBuild.Id,
-                    Time = TimeHelper.Now,
-                    Message = "This is a task message"
-                };
-
-                provider.TaskMessageService.WriteMessage(message);
-
-                provider.Commit();
-            }
-
             using (var service = TestHelper.GetService())
             {
+                using (var provider = service.OpenContext())
+                {
+                    var projectInfo = new ProjectInfo
+                    {
+                        ProjectName = "Project1",
+                        Status = Status.Running,
+                        Activity = Activity.Building
+                    };
+
+                    provider.ProjectInfoService.Save(projectInfo);
+
+                    var projectBuild = new ProjectBuild
+                    {
+                        ProjectInfoId = projectInfo.Id,
+                        BuildTime = TimeHelper.Now,
+                        LogFile = "build.txt"
+                    };
+
+                    provider.ProjectBuildService.Save(projectBuild);
+
+                    var message = new TaskMessage
+                    {
+                        ProjectInfoId = projectInfo.Id,
+                        ProjectBuildId = projectBuild.Id,
+                        Time = TimeHelper.Now,
+                        Message = "This is a task message"
+                    };
+
+                    provider.TaskMessageService.WriteMessage(message);
+
+                    provider.Commit();
+                }
+
+            
                 var views = service.GetProjectViews();
 
                 Assert.IsTrue(views.Count() > 0);
