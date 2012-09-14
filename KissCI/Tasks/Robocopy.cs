@@ -47,7 +47,7 @@ namespace KissCI.Tasks
             {
                 ctx.Log("Begin robocopy from: {0} to: {1} with args: {2}", arg.SourceDirectory, arg.DestinationDirectory, arg.Args);
 
-                using (var proc = ProcessHelper.Start("robocopy", string.Format("{0} {1} {2}", arg.Args, arg.SourceDirectory, arg.DestinationDirectory)))
+                using (var proc = ProcessHelper.Start("robocopy", string.Format("{0} \"{1}\" \"{2}\"", arg.Args, arg.SourceDirectory, arg.DestinationDirectory)))
                 {
                     ctx.Log(proc.StandardOutput.ReadToEnd());
                     ctx.Log(proc.StandardError.ReadToEnd());
