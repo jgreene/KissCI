@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.Linq;
+using System.ServiceProcess;
 
 namespace KissCI.Service
 {
@@ -13,6 +14,15 @@ namespace KissCI.Service
         public KissCIInstaller()
         {
             InitializeComponent();
+
+            var processInstaller = new ServiceProcessInstaller();
+            processInstaller.Account = ServiceAccount.LocalSystem;
+            var installer = new ServiceInstaller();
+
+            installer.StartType = ServiceStartMode.Automatic;
+            installer.ServiceName = "KissCIWebService";
+
+            Installers.Add(installer);
         }
     }
 }
