@@ -62,7 +62,14 @@ namespace KissCI.Service
                 }
                 catch
                 {
-                    installer.Rollback(state);
+                    try
+                    {
+                        installer.Rollback(state);
+                    }
+                    catch
+                    {
+
+                    }
                     throw;
                 }
             }
