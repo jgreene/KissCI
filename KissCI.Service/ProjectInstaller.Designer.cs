@@ -28,29 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
+            this.KissCIWebServiceInstaller = new System.ServiceProcess.ServiceInstaller();
             // 
-            // serviceProcessInstaller1
+            // KissCIWebServiceInstaller
             // 
-            this.serviceProcessInstaller1.Password = null;
-            this.serviceProcessInstaller1.Username = null;
-            // 
-            // serviceInstaller1
-            // 
-            this.serviceInstaller1.ServiceName = "KissCIInstaller";
+            this.KissCIWebServiceInstaller.ServiceName = "KissCIWebService";
+            this.KissCIWebServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // KissCIInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this.serviceProcessInstaller1,
-            this.serviceInstaller1});
+            this.KissCIWebServiceInstaller});
 
         }
 
         #endregion
 
-        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
-        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
+        private System.ServiceProcess.ServiceInstaller KissCIWebServiceInstaller;
     }
 }

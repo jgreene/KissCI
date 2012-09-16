@@ -94,7 +94,7 @@ namespace KissCI.Service
             // 
             // KissCIWebService
             // 
-            this.ServiceName = "KissCIInstaller";
+            this.ServiceName = "KissCIWebService";
 
         }
     }
