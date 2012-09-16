@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 using System.Configuration;
+using NDesk.Options;
 
 namespace KissCI.Service
 {
@@ -19,6 +20,47 @@ namespace KissCI.Service
 
         public void Start(string[] args)
         {
+
+            var install = false;
+            var uninstall = false;
+            var serviceName = "";
+
+            var options = new OptionSet()
+            {
+                { "install=", v => { serviceName = v; install = true; } },
+                { "uninstall=", v => { serviceName = v; uninstall = true; } }
+            };
+
+            try
+            {
+                options.Parse(args);
+            }
+            catch (OptionException ex)
+            {
+                Console.WriteLine(string.Format("error parsing arguments: {0}", ex));
+                return;
+            }
+
+            if (install)
+            {
+                using (var service = new ServiceManager(serviceName, typeof(KissCIWebService).Assembly))
+                {
+                    service.Install();
+                    return;
+                }
+            }
+
+            if (uninstall)
+            {
+                using (var service = new ServiceManager(serviceName, typeof(KissCIWebService).Assembly))
+                {
+                    service.Uninstall();
+                    return;
+                }
+            }
+
+
+
             var root = new DirectoryInfo(Environment.CurrentDirectory).FullName;
             var port = int.Parse(ConfigurationManager.AppSettings["Port"]);
             var webPath = ConfigurationManager.AppSettings["WebPath"];
