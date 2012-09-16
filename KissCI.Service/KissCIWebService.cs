@@ -75,10 +75,11 @@ namespace KissCI.Service
             var hostName = ConfigurationManager.AppSettings["HostName"];
 
 
-            using (var server = new CassiniDev.Server(port, "/", webRoot, IPAddress.Any, hostName))
-            {
-                server.Start();
+            var server = new CassiniDev.Server(port, "/", webRoot, IPAddress.Any, hostName);
+            server.Start();
 
+            if (Environment.UserInteractive)
+            {
                 Console.ReadLine();
             }
         }
