@@ -11,19 +11,28 @@ namespace KissCI.Service
     [RunInstaller(true)]
     public partial class KissCIInstaller : System.Configuration.Install.Installer
     {
+
+        ServiceInstaller installer;
+        ServiceProcessInstaller processInstaller;
+
         public KissCIInstaller()
         {
             InitializeComponent();
 
-            var processInstaller = new ServiceProcessInstaller();
+            processInstaller = new ServiceProcessInstaller();
             processInstaller.Account = ServiceAccount.LocalSystem;
-            var installer = new ServiceInstaller();
+            installer = new ServiceInstaller();
 
             installer.StartType = ServiceStartMode.Manual;
             installer.ServiceName = "KissCIWebService";
 
             Installers.Add(installer);
             Installers.Add(processInstaller);
+        }
+
+        private void KissCIWebServiceInstaller_AfterInstall(object sender, InstallEventArgs e)
+        {
+
         }
     }
 }
