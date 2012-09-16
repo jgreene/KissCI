@@ -33,7 +33,6 @@
             // KissCIWebServiceInstaller
             // 
             this.KissCIWebServiceInstaller.ServiceName = "KissCIWebService";
-            this.KissCIWebServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             this.KissCIWebServiceInstaller.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.KissCIWebServiceInstaller_AfterInstall);
             // 
             // KissCIInstaller
