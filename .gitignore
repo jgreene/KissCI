@@ -57,5 +57,7 @@ _ReSharper*/
 # visual studio database projects
 *.dbmdl
 
+FakesAssemblies/
+
 
 KissCI.Web/KissCI/
