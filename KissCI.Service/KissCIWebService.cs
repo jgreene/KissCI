@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using System.Configuration;
 using NDesk.Options;
+using KissCI.Helpers;
 
 namespace KissCI.Service
 {
@@ -41,10 +42,6 @@ namespace KissCI.Service
                 return;
             }
 
-            Console.WriteLine(install);
-            Console.WriteLine(uninstall);
-            Console.WriteLine(serviceName);
-
             if (install)
             {
                 using (var service = new ServiceManager(serviceName, typeof(KissCIWebService).Assembly))
@@ -65,7 +62,7 @@ namespace KissCI.Service
 
 
 
-            var root = new DirectoryInfo(Environment.CurrentDirectory).FullName;
+            var root = DirectoryHelper.ExecutingDirectory().FullName;
             var port = int.Parse(ConfigurationManager.AppSettings["Port"]);
             var webPath = ConfigurationManager.AppSettings["WebPath"];
             if (string.IsNullOrEmpty(webPath))
