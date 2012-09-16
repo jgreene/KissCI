@@ -88,5 +88,14 @@ namespace KissCI.Service
         {
 
         }
+
+        private void InitializeComponent()
+        {
+            // 
+            // KissCIWebService
+            // 
+            this.ServiceName = "KissCIInstaller";
+
+        }
     }
 }
