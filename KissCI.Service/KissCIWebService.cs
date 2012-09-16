@@ -41,6 +41,10 @@ namespace KissCI.Service
                 return;
             }
 
+            Console.WriteLine(install);
+            Console.WriteLine(uninstall);
+            Console.WriteLine(serviceName);
+
             if (install)
             {
                 using (var service = new ServiceManager(serviceName, typeof(KissCIWebService).Assembly))
