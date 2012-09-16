@@ -23,6 +23,7 @@ namespace KissCI.Service
             installer.ServiceName = "KissCIWebService";
 
             Installers.Add(installer);
+            Installers.Add(processInstaller);
         }
     }
 }
