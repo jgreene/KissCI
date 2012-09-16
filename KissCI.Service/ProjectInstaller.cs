@@ -19,7 +19,7 @@ namespace KissCI.Service
             processInstaller.Account = ServiceAccount.LocalSystem;
             var installer = new ServiceInstaller();
 
-            installer.StartType = ServiceStartMode.Automatic;
+            installer.StartType = ServiceStartMode.Manual;
             installer.ServiceName = "KissCIWebService";
 
             Installers.Add(installer);
