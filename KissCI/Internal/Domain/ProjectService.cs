@@ -52,6 +52,7 @@ namespace KissCI.Internal.Domain
             _factory = factory;
             _dataProvider = dataProvider;
 
+            _factory.ProjectsModified += (src, ev) => EnsureProjectInfos();
             EnsureProjectInfos();
         }
 

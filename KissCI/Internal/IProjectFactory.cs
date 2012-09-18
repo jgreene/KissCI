@@ -13,6 +13,7 @@ namespace KissCI.Internal
     public interface IProjectFactory : IDisposable
     {
         IList<Project> FetchProjects();
+        event EventHandler ProjectsModified;
     }
 
     public class MainProjectFactory : IProjectFactory
@@ -56,6 +57,11 @@ namespace KissCI.Internal
             var providers = providerTypes.Select(p => (IProjectProvider)Activator.CreateInstance(p));
 
             _projects = providers.SelectMany(p => p.Projects()).ToList();
+
+            if (ProjectsModified != null)
+            {
+                ProjectsModified(this, EventArgs.Empty);
+            }
         }
 
         public IList<Project> FetchProjects()
@@ -67,5 +73,8 @@ namespace KissCI.Internal
         {
             _watcher.Dispose();
         }
+
+
+        public event EventHandler ProjectsModified;
     }
 }
