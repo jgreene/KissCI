@@ -42,6 +42,9 @@ namespace KissCI.Service
                 return;
             }
 
+            if (string.IsNullOrEmpty(serviceName) == false)
+                KissCIInstaller.ServiceName = serviceName;
+
             if (install)
             {
                 using (var service = new ServiceManager(serviceName, typeof(KissCIWebService).Assembly))

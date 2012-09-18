@@ -42,7 +42,7 @@ namespace KissCI.Service
 
         AssemblyInstaller GetInstaller()
         {
-            var installer = new AssemblyInstaller(_assembly, new string[] { string.Format("/ServiceName={0}", _serviceName) });
+            var installer = new AssemblyInstaller(_assembly, null);
             installer.UseNewContext = true;
             return installer;
         }

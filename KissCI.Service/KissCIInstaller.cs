@@ -10,6 +10,8 @@ namespace KissCI.Service
     [RunInstaller(true)]
     public class KissCIInstaller : System.Configuration.Install.Installer
     {
+        public static string ServiceName = "KissCIWebService";
+
         public KissCIInstaller()
         {
 
@@ -18,7 +20,7 @@ namespace KissCI.Service
             var installer = new ServiceInstaller();
 
             installer.StartType = ServiceStartMode.Automatic;
-            installer.ServiceName = "KissCIWebService";
+            installer.ServiceName = ServiceName;
 
             Installers.Add(installer);
             Installers.Add(processInstaller);
