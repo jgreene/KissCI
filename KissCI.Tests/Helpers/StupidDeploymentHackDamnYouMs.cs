@@ -1,4 +1,4 @@
-﻿using KissCI.Projects;
+﻿using KissCI.Tests.Projects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

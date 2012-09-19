@@ -80,13 +80,13 @@
     <Fakes Include="Fakes\KissCI.Tests.FakeTests.fakes" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KissCI.Projects\KissCI.Projects.csproj">
-      <Project>{88cce70b-5b17-42c4-a84f-e069a9be80a0}</Project>
-      <Name>KissCI.Projects</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KissCI.Tests.FakeTests\KissCI.Tests.FakeTests.csproj">
       <Project>{4ff7cff7-0828-4ed6-885c-17e09d25b775}</Project>
       <Name>KissCI.Tests.FakeTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KissCI.Tests.Projects\KissCI.Tests.Projects.csproj">
+      <Project>{60175d3d-4f44-46e8-8c56-4cba8f6272b3}</Project>
+      <Name>KissCI.Tests.Projects</Name>
     </ProjectReference>
     <ProjectReference Include="..\KissCI\KissCI.csproj">
       <Project>{677930eb-ca6f-4d7e-a6e5-153c27db9833}</Project>

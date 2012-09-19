@@ -37,6 +37,9 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
@@ -91,6 +94,7 @@
     <Compile Include="Tasks\Robocopy.cs" />
     <Compile Include="Tasks\Subversion.cs" />
     <Compile Include="Tasks\TempDirectory.cs" />
+    <Compile Include="Tasks\Zip.cs" />
     <Compile Include="Triggers\IntervalTrigger.cs" />
     <Compile Include="Triggers\ITrigger.cs" />
   </ItemGroup>

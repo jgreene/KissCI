@@ -24,7 +24,7 @@ namespace KissCI.Tests.Helpers
             var copyTo = Path.Combine(outputDirectory, "Projects");
             DirectoryHelper.EnsureDirectory(copyTo);
 
-            var projectsFile = "KissCI.Projects.dll";
+            var projectsFile = "KissCI.Tests.Projects.dll";
 
             try
             {
