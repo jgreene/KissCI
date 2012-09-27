@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using KissCI.Tasks;
+using KissCI.Projects.Tasks;
 
 namespace KissCI.Projects
 {
@@ -58,11 +59,22 @@ namespace KissCI.Projects
             .AddStep((ctx, arg) => {
                 return new ZipArgs
                 {
-                    DirectoryPath = arg.CopiedToDirectory,
+                    DirectoryPath = outputTo,
                     FilePath = Path.Combine(outputDir, "KissCI.Service.zip")
                 };
             })
             .Zip()
+            .AddStep((ctx, arg) => {
+                return new GithubUploaderArgs {
+                    GithubUser = "jgreene",
+                    GithubPassword = "********",
+                    FilePath = arg.FilePath,
+                    Owner = "jgreene",
+                    Repository = "KissCI",
+                    Description = "KissCI latest"
+                };
+            })
+            .GithubUpload()
             .Finalize();
 
             

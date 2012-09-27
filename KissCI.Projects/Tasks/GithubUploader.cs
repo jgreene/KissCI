@@ -6,36 +6,37 @@ using System.Text;
 using KissCI;
 using KissCI.Helpers;
 using KissCI.Tasks;
-using GitHubUploader.Core;
 
 namespace KissCI.Projects.Tasks
 {
     public class GithubUploaderArgs
     {
+        public string Owner { get; set; }
         public string Repository { get; set; }
         public string GithubUser { get; set; }
         public string GithubPassword { get; set; }
         public string FilePath { get; set; }
         public string Description { get; set; }
-        public string FileType { get; set; }
     }
 
     public class GithubUploaderResult
     {
         public string FileLocation { get; set; }
+        public string GithubFileUrl { get; set; }
     }
 
     public static class GithubUploaderExtensions
     {
-        public static BuildTask<TArg, GithubUploaderResult> GithubUpload<TArg, TResult>(this BuildTask<TArg, TResult> t, string repository, string username, string password, string filePath, string fileType, string description = null)
+        public static BuildTask<TArg, GithubUploaderResult> GithubUpload<TArg, TResult>(this BuildTask<TArg, TResult> t, string owner, string repository, string username, string password, string filePath, string description = null)
         {
             return t.AddStep((ctx, arg) =>
             {
                 return new GithubUploaderArgs { 
                     GithubUser = username,
                     GithubPassword = password,
+                    Owner = owner,
+                    Repository = repository,
                     FilePath = filePath,
-                    FileType = fileType
                 };
             }).GithubUpload();
         }
@@ -44,22 +45,19 @@ namespace KissCI.Projects.Tasks
         {
             return t.AddTask("Github upload", (ctx, arg) =>
             {
-                var uploader = new GithubUploader(arg.GithubUser, arg.GithubPassword);
+                var user = new GithubUser(arg.GithubUser, arg.GithubPassword);
+                var repo = user.WithRepo(arg.Owner, arg.Repository);
 
-                var info = new System.IO.FileInfo(arg.FilePath);
+                var fileName = Path.GetFileName(arg.FilePath);
 
-                string fileLocation = uploader.Upload(new UploadInfo
-                {
-                    ContentType = arg.FileType,
-                    FileName = arg.FilePath,
-                    Description = arg.Description,
-                    Name = info.Name,
-                    Repository = arg.Repository
-                });
+                repo.DeleteByName(fileName);
+
+                var upload = repo.Upload(arg.FilePath, arg.Description);
 
                 return new GithubUploaderResult
                 {
-                    FileLocation = fileLocation
+                    FileLocation = arg.FilePath,
+                    GithubFileUrl = upload.url
                 };
             });
         }

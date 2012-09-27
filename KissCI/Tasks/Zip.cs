@@ -38,7 +38,6 @@ namespace KissCI.Tasks
                     zip.Save(arg.FilePath);
                 }
 
-
                 return new ZipResult {
                     FilePath = arg.FilePath
                 };
