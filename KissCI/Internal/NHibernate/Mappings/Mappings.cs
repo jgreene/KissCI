@@ -41,7 +41,8 @@ namespace KissCI.NHibernate.Internal.Mappings
             Map(x => x.ProjectInfoId);
             Map(x => x.ProjectBuildId);
             Map(x => x.Time);
-            Map(x => x.Message);   
+            Map(x => x.Message);
+            Map(x => x.Type);
         }
     }
 }

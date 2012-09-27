@@ -19,7 +19,6 @@ namespace KissCI
             IProjectService projectService, 
             ProjectInfo info, 
             ProjectBuild build,
-            ILogger logger, 
             int taskCount,
             CancellationToken? token)
         {
@@ -29,10 +28,7 @@ namespace KissCI
                 throw new NullReferenceException("project info was null");
             if (build == null)
                 throw new NullReferenceException("build was null");
-            if (logger == null)
-                throw new NullReferenceException("Logger was null");
 
-            _logger = logger;
             _taskCount = taskCount;
             _projectService = projectService;
             _info = info;
@@ -40,20 +36,17 @@ namespace KissCI
             _token = token;
         }
 
-        readonly ILogger _logger;
         readonly int _taskCount;
         readonly ProjectInfo _info;
         readonly ProjectBuild _build;
         readonly IProjectService _projectService;
         readonly CancellationToken? _token;
 
-        public ILogger Logger { get { return _logger; } }
         public string ProjectName { get { return _info.ProjectName; } }
         public int TaskCount { get { return _taskCount; } }
 
         internal void LogMessage(string format, params object[] parameters)
         {
-            Log(format, parameters);
             using (var ctx = _projectService.OpenContext())
             {
                 ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
@@ -62,6 +55,7 @@ namespace KissCI
                     ProjectBuildId = _build.Id,
                     Time = TimeHelper.Now,
                     Message = string.Format(format, parameters),
+                    Type = MessageType.TaskMessage
                 });
                 ctx.Commit();
             }
@@ -69,12 +63,24 @@ namespace KissCI
 
         public void Log(string message)
         {
-            _logger.Log(message);
+            using (var ctx = _projectService.OpenContext())
+            {
+                ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
+                {
+                    ProjectInfoId = _info.Id,
+                    ProjectBuildId = _build.Id,
+                    Time = TimeHelper.Now,
+                    Message = message,
+                    Type = MessageType.LogMessage
+                });
+
+                ctx.Commit();
+            }
         }
         
         public void Log(string format, params object[] parameters)
         {
-            _logger.Log(format, parameters);
+            Log(string.Format(format, parameters));
         }
 
         IList<Action> _cleanupActions = new List<Action>();

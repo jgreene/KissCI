@@ -81,7 +81,6 @@
     <Compile Include="Internal\NHibernate\TaskMessageService.cs" />
     <Compile Include="Internal\ProjectHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
-    <Compile Include="Internal\ILogger.cs" />
     <Compile Include="Internal\IDataContext.cs" />
     <Compile Include="Internal\IProjectFactory.cs" />
     <Compile Include="Internal\StupidDeploymentHackDamnYouMs.cs" />

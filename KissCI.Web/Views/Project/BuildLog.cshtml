@@ -49,15 +49,23 @@
 
     <div class="log">
         <h5>Log</h5>
-        <fieldset>
-        @{ 
-            using(var reader = File.OpenText(Model.Build.LogFile)){
-                string line;
-                while((line = reader.ReadLine()) != null){
-                    <div>@Html.Raw(line)</div>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var msg in Model.Logs)
+                {
+                    <tr>
+                        <td>@msg.Time.ToString()</td>
+                        <td>@Html.Raw(msg.Message)</td>
+                    </tr>
+                
                 }
-            }
-        }
-        </fieldset>
+            </tbody>
+        </table>
     </div>
 </div>

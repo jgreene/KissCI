@@ -26,14 +26,22 @@ namespace KissCI.Internal.Domain
         CleaningUp
     }
 
+    public enum MessageType : long
+    {
+        LogMessage,
+        TaskMessage
+    }
 
     public class TaskMessage
     {
+        
+
         public virtual long Id { get; set; }
         public virtual long ProjectBuildId { get; set; }
         public virtual long ProjectInfoId { get; set; }
         public virtual DateTime Time { get; set; }
         public virtual string Message { get; set; }
+        public virtual MessageType Type { get; set; }
     }
 
     public class ProjectBuild

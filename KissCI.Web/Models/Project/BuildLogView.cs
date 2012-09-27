@@ -11,5 +11,6 @@ namespace KissCI.Web.Models.Project
         public ProjectInfo Info { get; set; }
         public ProjectBuild Build { get; set; }
         public IEnumerable<TaskMessage> Messages { get; set; }
+        public IEnumerable<TaskMessage> Logs { get; set; }
     }
 }

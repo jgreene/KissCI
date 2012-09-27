@@ -114,13 +114,14 @@ namespace KissCI.Web.Controllers
 
                 var info = ctx.ProjectInfoService.GetProjectInfos().FirstOrDefault(i => i.Id == build.ProjectInfoId);
 
-                var messages = ctx.TaskMessageService.GetMessagesForBuild(id).ToList();
+                var messages = ctx.TaskMessageService.GetMessagesForBuild(id).OrderBy(m => m.Time).ToList();
 
                 var view = new BuildLogView
                 {
                     Info = info,
                     Build = build,
-                    Messages = messages
+                    Messages = messages.Where(m=>m.Type == MessageType.TaskMessage),
+                    Logs = messages
                 };
 
                 return View("BuildLog", view);

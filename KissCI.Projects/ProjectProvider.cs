@@ -67,7 +67,7 @@ namespace KissCI.Projects
             .AddStep((ctx, arg) => {
                 return new GithubUploaderArgs {
                     GithubUser = "jgreene",
-                    GithubPassword = "********",
+                    GithubPassword = "******",
                     FilePath = arg.FilePath,
                     Owner = "jgreene",
                     Repository = "KissCI",

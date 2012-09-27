@@ -64,9 +64,7 @@ namespace KissCI.Internal.Domain
         {
             var folders = new string[]{
                 _directoryRoot,
-                _projectFolder,
-                _logFolder,
-                _buildFolder
+                _projectFolder
             };
 
             foreach (var folder in folders)

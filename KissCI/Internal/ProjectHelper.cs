@@ -1,7 +1,6 @@
 ﻿using KissCI.Helpers;
 using KissCI.Internal;
 using KissCI.Internal.Domain;
-using KissCI.Internal.Loggers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,43 +68,40 @@ namespace KissCI.Internal.Helpers
                 }
             });
 
-            using (var logger = new BuildLogger(build))
+            var context = new TaskContext(projectService, info, build, project.Tasks.Count, token);
+
+            context.LogMessage("Beginning tasks for {0}", context.ProjectName);
+
+            setActivity(Activity.Building);
+
+            try
             {
-                var context = new TaskContext(projectService, info, build, logger, project.Tasks.Count, token);
+                project.Tasks.Binder(context, new BuildTaskStart());
 
-                context.LogMessage("Beginning tasks for {0}", context.ProjectName);
-
-                setActivity(Activity.Building);
+                setBuildStatus(BuildResult.Success);
+            }
+            catch (OperationCanceledException ex)
+            {
+                context.Log(ex.ToString());
+                setBuildStatus(BuildResult.Cancelled);
+            }
+            catch (Exception ex)
+            {
+                context.LogMessage("Build failed with an exception of: {0}", ex);
+                setBuildStatus(BuildResult.Failure);
+                throw;
+            }
+            finally
+            {
+                setActivity(Activity.CleaningUp);
 
                 try
                 {
-                    project.Tasks.Binder(context, new BuildTaskStart());
-
-                    setBuildStatus(BuildResult.Success);
-                }
-                catch (OperationCanceledException ex)
-                {
-                    context.Log(ex.ToString());
-                    setBuildStatus(BuildResult.Cancelled);
-                }
-                catch (Exception ex)
-                {
-                    context.LogMessage("Build failed with an exception of: {0}", ex);
-                    setBuildStatus(BuildResult.Failure);
-                    throw;
+                    context.Cleanup();
                 }
                 finally
                 {
-                    setActivity(Activity.CleaningUp);
-
-                    try
-                    {
-                        context.Cleanup();
-                    }
-                    finally
-                    {
-                        setActivity(Activity.Sleeping);
-                    }
+                    setActivity(Activity.Sleeping);
                 }
             }
         }
