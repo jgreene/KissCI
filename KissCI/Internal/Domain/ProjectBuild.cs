@@ -51,7 +51,6 @@ namespace KissCI.Internal.Domain
         public virtual DateTime BuildTime { get; set; }
         public virtual DateTime? CompleteTime { get; set; }
         public virtual Nullable<BuildResult> BuildResult { get; set; }
-        public virtual string LogFile { get; set; }
     }
 
     public class ProjectInfo

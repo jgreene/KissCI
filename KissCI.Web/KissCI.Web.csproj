@@ -210,7 +210,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Helpers\" />
-    <Folder Include="KissCI\Projects\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -29,7 +29,6 @@ namespace KissCI.NHibernate.Internal.Mappings
             Map(x => x.BuildTime);
             Map(x => x.CompleteTime);
             Map(x => x.BuildResult);
-            Map(x => x.LogFile);
         }
     }
 

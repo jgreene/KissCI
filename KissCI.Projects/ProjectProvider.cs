@@ -77,9 +77,6 @@ namespace KissCI.Projects
             .GithubUpload()
             .Finalize();
 
-            
-
-
             var project = new Project("KissCI.Service", "Services", serviceTask);
             project.AddTimer(TimeHelper.Now);
             return project;

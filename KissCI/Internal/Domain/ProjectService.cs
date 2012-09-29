@@ -23,7 +23,6 @@ namespace KissCI.Internal.Domain
         ProjectInfo GetProjectInfo(string projectName);
         bool RunProject(string projectName);
         bool CancelProject(string projectName);
-        string BuildLogsDirectory { get; }
         IDataContext OpenContext();
         void RegisterProject(Project project);
         void StopProject(string projectName);
@@ -46,19 +45,13 @@ namespace KissCI.Internal.Domain
         {
             _directoryRoot = directoryRoot;
             _projectFolder = Path.Combine(directoryRoot, "Projects");
-            _logFolder = Path.Combine(directoryRoot, "Logs");
-            _buildFolder = Path.Combine(directoryRoot, "Builds");
             EnsureFolders();
             _factory = factory;
             _dataProvider = dataProvider;
-
-            _factory.ProjectsModified += (src, ev) => EnsureProjectInfos();
             EnsureProjectInfos();
         }
 
         string _projectFolder;
-        string _logFolder;
-        string _buildFolder;
 
         void EnsureFolders()
         {
@@ -154,8 +147,6 @@ namespace KissCI.Internal.Domain
                 ctx.Commit();
             }
         }
-
-        public string BuildLogsDirectory { get { return _logFolder; } }
 
         public IDataContext OpenContext() { return _dataProvider(); }
 
@@ -377,7 +368,6 @@ namespace KissCI.Internal.Domain
         public void Dispose()
         {
             StopTriggers();
-            _factory.Dispose();
         }
     }
 }

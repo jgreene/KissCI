@@ -86,8 +86,7 @@ namespace KissCI.Tests.Domain
                     var projectBuild = new ProjectBuild
                     {
                         ProjectInfoId = projectInfo.Id,
-                        BuildTime = TimeHelper.Now,
-                        LogFile = "build.txt"
+                        BuildTime = TimeHelper.Now
                     };
 
                     provider.ProjectBuildService.Save(projectBuild);

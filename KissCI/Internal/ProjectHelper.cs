@@ -37,7 +37,6 @@ namespace KissCI.Internal.Helpers
             ProjectBuild build = new ProjectBuild {
                 BuildTime = now,
                 ProjectInfoId = info.Id,
-                LogFile = GetLogFileName(projectService.BuildLogsDirectory, project.Name, now),
             };
 
             using (var ctx = projectService.OpenContext())

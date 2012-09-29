@@ -10,10 +10,9 @@ using System.Text;
 
 namespace KissCI.Internal
 {
-    public interface IProjectFactory : IDisposable
+    public interface IProjectFactory
     {
         IList<Project> FetchProjects();
-        event EventHandler ProjectsModified;
     }
 
     public class MainProjectFactory : IProjectFactory
@@ -23,22 +22,10 @@ namespace KissCI.Internal
         {
             _directory = directory;
             DirectoryHelper.EnsureDirectories(_directory);
-            _watcher = new FileSystemWatcher(_directory);
-            _watcher.Changed += _watcher_Changed;
-            _watcher.Created += _watcher_Changed;
-            _watcher.Deleted += _watcher_Changed;
-            _watcher.Renamed += _watcher_Changed;
-            _watcher.EnableRaisingEvents = true;
-            LoadAssemblies();
-        }
-
-        void _watcher_Changed(object sender, FileSystemEventArgs e)
-        {
             LoadAssemblies();
         }
 
         readonly string _directory;
-        readonly FileSystemWatcher _watcher;
         IList<Project> _projects = new List<Project>();
 
 
@@ -47,7 +34,7 @@ namespace KissCI.Internal
             var dir = new DirectoryInfo(_directory);
             var files = dir.GetFiles().Where(f => f.FullName.ToLower().EndsWith(".dll"));
 
-            var assemblies = files.Select(f => Assembly.LoadFile(f.FullName));
+            var assemblies = files.Select(f => Assembly.LoadFrom(f.FullName));
 
             var allTypes = assemblies.SelectMany(a => a.GetTypes());
 
@@ -57,24 +44,11 @@ namespace KissCI.Internal
             var providers = providerTypes.Select(p => (IProjectProvider)Activator.CreateInstance(p));
 
             _projects = providers.SelectMany(p => p.Projects()).ToList();
-
-            if (ProjectsModified != null)
-            {
-                ProjectsModified(this, EventArgs.Empty);
-            }
         }
 
         public IList<Project> FetchProjects()
         {
             return _projects;
         }
-
-        public void Dispose()
-        {
-            _watcher.Dispose();
-        }
-
-
-        public event EventHandler ProjectsModified;
     }
 }
