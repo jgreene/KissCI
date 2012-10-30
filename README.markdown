@@ -48,5 +48,19 @@ If at any point you need to massage data into a different format/class you can u
 
 #### Setting it up
 
-[TODO: Fill out this section]
+Go to https://github.com/jgreene/KissCI/downloads and download KissCI.Service.zip.  This should be the latest KissCI build.
+
+Extract this .zip file to a directory of your choosing and then register it as a windows service by running:
+
+    KissCI.Service.exe -install KissCIService
+
+To uninstall call:
+
+    KissCI.Service.exe -uninstall KissCIService
+
+You can choose whatever name you would like for your service by simply changing "KissCIService" to whatever you would like.
+
+#### Configuring KissCI
+
+The configuration for KissCI lives within the KissCI.Service.exe.config file.  Currently there are only two options: Port and HostName.
 

@@ -56,6 +56,11 @@ namespace KissCI.Projects
                 return new RobocopyArgs(Path.Combine(arg.OutputPath, "_PublishedWebsites", "KissCI.Web"), outputWebTo);
             })
             .Robocopy()
+            .AddTask("Ensure Projects folder", (ctx, arg) => {
+                var projectsPath = Path.Combine(outputTo, "Projects");
+                DirectoryHelper.EnsureDirectory(projectsPath);
+                return arg;
+            })
             .AddStep((ctx, arg) => {
                 return new ZipArgs
                 {
@@ -67,7 +72,7 @@ namespace KissCI.Projects
             .AddStep((ctx, arg) => {
                 return new GithubUploaderArgs {
                     GithubUser = "jgreene",
-                    GithubPassword = "******",
+                    GithubPassword = "*****",
                     FilePath = arg.FilePath,
                     Owner = "jgreene",
                     Repository = "KissCI",
