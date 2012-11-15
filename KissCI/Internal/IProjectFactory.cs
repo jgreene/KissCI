@@ -31,15 +31,30 @@ namespace KissCI.Internal
 
         void LoadAssemblies()
         {
-            var dir = new DirectoryInfo(_directory);
-            var files = dir.GetFiles().Where(f => f.FullName.ToLower().EndsWith(".dll"));
+            var getAssemblies = new Func<DirectoryInfo, IEnumerable<FileInfo>>((input) => {
+                return input.GetFiles().Where(f => f.FullName.ToLower().EndsWith(".dll"));
+            });
 
-            var assemblies = files.Select(f => Assembly.LoadFrom(f.FullName));
+            var dir = new DirectoryInfo(_directory);
+            var files = getAssemblies(dir);
+            var execDir = DirectoryHelper.ExecutingDirectory();
+            var execFiles = getAssemblies(execDir);
+
+            foreach (var assembly in files.Concat(execFiles))
+            {
+                try
+                {
+                    Assembly.LoadFrom(assembly.FullName);
+                }
+                catch { }
+            }
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             var allTypes = assemblies.SelectMany(a => a.GetTypes());
 
             var typ = typeof(IProjectProvider);
-            var providerTypes = allTypes.Where(t => typ.IsAssignableFrom(t));
+            var providerTypes = allTypes.Where(t => typ.IsAssignableFrom(t) && t != typ);
 
             var providers = providerTypes.Select(p => (IProjectProvider)Activator.CreateInstance(p));
 

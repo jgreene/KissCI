@@ -47,6 +47,7 @@ namespace KissCI
 
         internal void LogMessage(string format, params object[] parameters)
         {
+            var message = string.Format(format, parameters);
             using (var ctx = _projectService.OpenContext())
             {
                 ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
@@ -54,11 +55,13 @@ namespace KissCI
                     ProjectInfoId = _info.Id,
                     ProjectBuildId = _build.Id,
                     Time = TimeHelper.Now,
-                    Message = string.Format(format, parameters),
+                    Message = message,
                     Type = MessageType.TaskMessage
                 });
                 ctx.Commit();
             }
+
+            Console.WriteLine(message);
         }
 
         public void Log(string message)
@@ -76,6 +79,8 @@ namespace KissCI
 
                 ctx.Commit();
             }
+
+            Console.WriteLine(message);
         }
         
         public void Log(string format, params object[] parameters)

@@ -66,7 +66,7 @@
     <Compile Include="BuildTask.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
-    <Compile Include="Helpers\TestHelper.cs" />
+    <Compile Include="Helpers\ServiceHelper.cs" />
     <Compile Include="Internal\Domain\IProjectBuildService.cs" />
     <Compile Include="Internal\Domain\IProjectInfoService.cs" />
     <Compile Include="Internal\Domain\ITaskMessageService.cs" />
