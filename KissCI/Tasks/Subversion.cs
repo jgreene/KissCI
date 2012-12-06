@@ -52,7 +52,7 @@ namespace KissCI.Tasks
             _subversionPath = SubversionPaths.FirstOrDefault(p => File.Exists(p));
 
             if (_subversionPath == null)
-                throw new Exception("Could not find svn.exe are you sure it is installed?");
+                throw new FileNotFoundException("Could not find svn.exe are you sure it is installed?");
 
             return _subversionPath;
         }
@@ -65,31 +65,25 @@ namespace KissCI.Tasks
             }).Subversion();
         }
 
-        static string GetCheckoutArgs(SubversionArgs arg)
+        static string GetArgs(SubversionArgs arg)
         {
-            var authArgs = string.Format("-username {0} -password {1}", arg.UserName, arg.Password);
+            var svnExists = Directory.Exists(Path.Combine(arg.Destination, ".svn"));
 
-            var args = string.Format("\"{0}\" \"{1}\"", arg.TrunkUrl, arg.Destination);
+            var args = svnExists ? 
+                string.Format("update \"{0}\"", arg.Destination) 
+                :
+                string.Format("checkout \"{0}\" \"{1}\"", arg.TrunkUrl, arg.Destination);
 
+            var authArgs = string.Format("--username {0} --password {1}", arg.UserName, arg.Password);
             if (string.IsNullOrEmpty(arg.UserName) == false && string.IsNullOrEmpty(arg.Password) == false)
                 args = string.Format("{0} {1}", args, authArgs);
+
+            var defaultArgs = " --non-interactive --trust-server-cert --no-auth-cache";
 
             if (string.IsNullOrEmpty(arg.Args) == false)
                 args = args + " " + arg.Args;
 
-            return string.Format("checkout {0}", args);
-        }
-
-        static string GetUpdateArgs(SubversionArgs arg)
-        {
-            var authArgs = string.Format("-username {0} -password {1}", arg.UserName, arg.Password);
-
-            var args = string.Format("update \"{0}\"", arg.Destination);
-
-            if (string.IsNullOrEmpty(arg.UserName) == false && string.IsNullOrEmpty(arg.Password) == false)
-                args = args + " " + authArgs;
-
-            return args;
+            return args + defaultArgs;
         }
         
 
@@ -97,8 +91,7 @@ namespace KissCI.Tasks
         {
             return t.AddTask("Subversion checkout", (ctx, arg) =>
             {
-                var svnExists = Directory.Exists(Path.Combine(arg.Destination, ".svn"));
-                var args = svnExists ? GetUpdateArgs(arg) : GetCheckoutArgs(arg);
+                var args = GetArgs(arg);
 
                 ctx.Log("Begin svn checkout from: {0} and output to: {1} with args: {2}", 
                     arg.TrunkUrl, 

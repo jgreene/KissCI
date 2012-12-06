@@ -30,7 +30,10 @@ namespace KissCI.Web
 
             bundles.Add(new ScriptBundle("~/bundles/project")
                 .Include("~/Scripts/underscore.js")
+                .Include("~/Scripts/angular.js")
                 .Include("~/Scripts/projectviewtable.js")
+                .Include("~/Scripts/configuration.js")
+                
             );
 
             

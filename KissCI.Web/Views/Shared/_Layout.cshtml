@@ -18,7 +18,17 @@
           <a class="brand" href="#">KissCI</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Projects</a></li>
+              @if(ViewContext.RouteData.Values["controller"].ToString() == "Project"){
+                <li class="active"><a href="/">Projects</a></li>
+              }else{
+                <li><a href="/">Projects</a></li>   
+              }
+
+              @if(ViewContext.RouteData.Values["controller"].ToString() == "Configuration"){
+                <li class="active"><a href="/Configuration">Configuration</a></li>
+              }else{
+                <li><a href="/Configuration">Configuration</a></li>
+              }
               <li><a target="_blank" href="https://github.com/jgreene/KissCI">Github</a></li>
             </ul>
           </div><!--/.nav-collapse -->

@@ -44,4 +44,14 @@ namespace KissCI.NHibernate.Internal.Mappings
             Map(x => x.Type);
         }
     }
+
+    public class ConfigurationItemMap : ClassMap<ConfigurationItem>
+    {
+        public ConfigurationItemMap()
+        {
+            Id(x => x.Id);
+            Map(x => x.Key).UniqueKey("KeyIsUnique");
+            Map(x => x.Value);
+        }
+    }
 }

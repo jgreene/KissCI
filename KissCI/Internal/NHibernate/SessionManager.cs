@@ -58,6 +58,7 @@ namespace KissCI.NHibernate.Internal
                             m.FluentMappings.Add<ProjectInfoMap>();
                             m.FluentMappings.Add<ProjectBuildMap>();
                             m.FluentMappings.Add<TaskMessageMap>();
+                            m.FluentMappings.Add<ConfigurationItemMap>();
                         })
                         .ExposeConfiguration(cfg => {
                             var filePath = GetDbFile(root);

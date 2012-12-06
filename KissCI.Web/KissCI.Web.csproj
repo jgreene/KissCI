@@ -148,6 +148,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ConfigurationController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="DependencyResolution\StructureMapDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapDependencyScope.cs" />
@@ -167,6 +168,8 @@
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\configuration.js" />
     <Content Include="Scripts\projectviewtable.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="x64\SQLite.Interop.dll">
@@ -206,6 +209,8 @@
     <Content Include="Views\Project\ProjectBuilds.cshtml" />
     <Content Include="Views\Project\ProjectBuildTable.cshtml" />
     <Content Include="Views\Project\BuildLog.cshtml" />
+    <Content Include="Views\Configuration\List.cshtml" />
+    <Content Include="Views\Configuration\ConfigurationViewTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

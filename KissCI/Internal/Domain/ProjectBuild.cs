@@ -71,4 +71,11 @@ namespace KissCI.Internal.Domain
 
         public virtual Nullable<DateTime> NextBuildTime { get; set; }
     }
+
+    public class ConfigurationItem
+    {
+        public virtual long Id { get; set; }
+        public virtual string Key { get; set; }
+        public virtual string Value { get; set; }
+    }
 }

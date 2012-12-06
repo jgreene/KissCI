@@ -63,5 +63,52 @@ namespace KissCI.Tests.DataProviders
             }
         }
 
+
+        [TestMethod]
+        public void CanAddKey()
+        {
+            using (var service = TestHelper.GetService())
+            {
+                using (var context = service.OpenContext())
+                {
+                    context.ConfigurationService.Save("test", "1");
+                    context.Commit();
+                }
+
+                using (var context = service.OpenContext())
+                {
+                    var value = context.ConfigurationService.Get("test");
+
+                    Assert.AreEqual(value, "1");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void CanRemoveKey()
+        {
+            using (var service = TestHelper.GetService())
+            {
+                using (var context = DataHelper.OpenContext())
+                {
+                    context.ConfigurationService.Save("test", "1");
+                    context.Commit();
+
+                }
+
+                using (var context = DataHelper.OpenContext())
+                {
+                    context.ConfigurationService.Remove("test");
+                    context.Commit();
+                }
+
+                using (var context = DataHelper.OpenContext())
+                {
+                    var value = context.ConfigurationService.Get("test");
+
+                    Assert.IsNull(value);
+                }
+            }
+        }
     }
 }

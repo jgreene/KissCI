@@ -35,6 +35,11 @@ namespace KissCI.Internal.NHibernate
             get { return new ProjectInfoService(_session); }
         }
 
+        public IConfigurationService ConfigurationService
+        {
+            get { return new ConfigurationService(_session); }
+        }
+
         public void Commit()
         {
             if (_session.Transaction.IsActive

@@ -20,9 +20,9 @@ namespace KissCI.Tests.Projects
                     Directory.CreateDirectory(dir);
         }
 
-        public IEnumerable<Project> Projects()
+        public IEnumerable<Project> Projects(IConfiguration config)
         {
-            var current = DirectoryHelper.CurrentDirectory().Parent;
+            var current = DirectoryHelper.CurrentDirectory();
 
             var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");
 

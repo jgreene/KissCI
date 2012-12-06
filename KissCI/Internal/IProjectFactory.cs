@@ -51,14 +51,21 @@ namespace KissCI.Internal
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var allTypes = assemblies.SelectMany(a => a.GetTypes());
+            var allTypes = assemblies.SelectMany(a => { 
+                try {
+                    return a.GetTypes();
+                }
+                catch{
+                    return new Type[0];
+                }
+            });
 
             var typ = typeof(IProjectProvider);
             var providerTypes = allTypes.Where(t => typ.IsAssignableFrom(t) && t != typ);
 
             var providers = providerTypes.Select(p => (IProjectProvider)Activator.CreateInstance(p));
 
-            _projects = providers.SelectMany(p => p.Projects()).ToList();
+            _projects = providers.SelectMany(p => p.Projects(null)).ToList();
         }
 
         public IList<Project> FetchProjects()

@@ -11,6 +11,7 @@ namespace KissCI.Internal
         ITaskMessageService TaskMessageService { get; }
         IProjectBuildService ProjectBuildService { get; }
         IProjectInfoService ProjectInfoService { get; }
+        IConfigurationService ConfigurationService { get; }
 
         void Commit();
     }

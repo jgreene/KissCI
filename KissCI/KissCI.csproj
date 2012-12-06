@@ -67,12 +67,15 @@
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Helpers\ServiceHelper.cs" />
+    <Compile Include="Internal\Domain\ConfigurationImpl.cs" />
+    <Compile Include="Internal\Domain\IConfigurationService.cs" />
     <Compile Include="Internal\Domain\IProjectBuildService.cs" />
     <Compile Include="Internal\Domain\IProjectInfoService.cs" />
     <Compile Include="Internal\Domain\ITaskMessageService.cs" />
     <Compile Include="Internal\Domain\ProjectBuild.cs" />
     <Compile Include="Internal\Domain\ProjectService.cs" />
     <Compile Include="Helpers\ProcessHelper.cs" />
+    <Compile Include="Internal\NHibernate\ConfigurationService.cs" />
     <Compile Include="Internal\NHibernate\Mappings\Mappings.cs" />
     <Compile Include="Internal\NHibernate\NHibernateDataContext.cs" />
     <Compile Include="Internal\NHibernate\ProjectBuildService.cs" />
