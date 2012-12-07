@@ -13,10 +13,10 @@ namespace KissCI.Tests.Helpers
     {
         public static void CleanDb()
         {
+            SessionManager.Clear();
             var executableDirectory = DirectoryHelper.ExecutingDirectory();
             var dbPath = Path.Combine(executableDirectory.FullName, "KissCI.db3");
             File.Delete(dbPath);
-            SessionManager.Clear();
         }
 
         public static IDataContext OpenContext()

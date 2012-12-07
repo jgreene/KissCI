@@ -16,7 +16,6 @@ namespace KissCI.NHibernate.Internal
     {
         static readonly object configLock = new object();
         static readonly object factoryLock = new object();
-        static readonly object sessionLock = new object();
 
         static IDictionary<string, Configuration> _configs = new Dictionary<string, Configuration>();
         static IDictionary<string, ISessionFactory> _factories = new Dictionary<string, ISessionFactory>();
@@ -106,16 +105,13 @@ namespace KissCI.NHibernate.Internal
 
         public static ISession GetSession(string root)
         {
-            lock (sessionLock)
-            {
-                var factory = GetFactory(root);
+            var factory = GetFactory(root);
 
-                var sess = factory.OpenSession();
-                sess.FlushMode = FlushMode.Commit;
-                sess.BeginTransaction();
+            var sess = factory.OpenSession();
+            sess.FlushMode = FlushMode.Commit;
+            sess.BeginTransaction();
 
-                return sess;
-            }
+            return sess;
         }
     }
 }

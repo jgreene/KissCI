@@ -39,7 +39,7 @@ namespace KissCI.Tasks
             return t.AddStep((ctx, arg) =>
             {
                 var temp = new TempDirectory(tempRoot);
-                //ctx.RegisterCleanup(() => temp.Dispose());
+                ctx.RegisterCleanup(() => temp.Dispose());
 
                 return new MsBuildArgs(projectFile, temp.DirectoryPath, configuration);
             }).MsBuild4_0();
