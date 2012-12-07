@@ -159,7 +159,7 @@ namespace KissCI.Internal.Domain
         {
 
             //nhibernate linq sucks so we are really inneficient here with n + 2 queries
-            using(var provider = _dataProvider()){
+            using(var provider = this.OpenContext()){
                 var builds = provider.ProjectBuildService.GetBuilds().OrderByDescending(b => b.BuildTime).ThenByDescending(m => m.Id);
                 var messages = provider.TaskMessageService.GetMessages().OrderByDescending(m => m.Time).ThenByDescending(m => m.Id);
                 var infos = provider.ProjectInfoService.GetProjectInfos().ToList();
@@ -221,7 +221,7 @@ namespace KissCI.Internal.Domain
 
         public ProjectBuild GetMostRecentBuild(string projectName)
         {
-            using (var provider = _dataProvider())
+            using (var provider = this.OpenContext())
             {
                 return provider.ProjectBuildService.GetMostRecentBuild(projectName);
             }
@@ -230,7 +230,7 @@ namespace KissCI.Internal.Domain
 
         public IEnumerable<ProjectBuild> GetBuilds(string projectName)
         {
-            using (var provider = _dataProvider())
+            using (var provider = this.OpenContext())
             {
                 return provider.ProjectBuildService.GetBuildsForProject(projectName).ToList();
             }
@@ -238,7 +238,7 @@ namespace KissCI.Internal.Domain
 
         public ProjectInfo GetProjectInfo(string projectName)
         {
-            using (var provider = _dataProvider())
+            using (var provider = this.OpenContext())
             {
                 return provider.ProjectInfoService.GetProjectInfo(projectName);
             }
