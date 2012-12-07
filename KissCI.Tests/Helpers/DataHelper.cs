@@ -18,10 +18,5 @@ namespace KissCI.Tests.Helpers
             var dbPath = Path.Combine(executableDirectory.FullName, "KissCI.db3");
             File.Delete(dbPath);
         }
-
-        public static IDataContext OpenContext()
-        {
-            return TestHelper.GetService().OpenContext();
-        }
     }
 }

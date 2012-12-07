@@ -62,38 +62,37 @@ namespace KissCI.Tests.Domain
         public void CanGetProjectViews()
         {
             using (var service = TestHelper.GetService())
+            using (var context = service.OpenContext())
             {
-                using (var provider = service.OpenContext())
+                
+                var projectInfo = new ProjectInfo
                 {
-                    var projectInfo = new ProjectInfo
-                    {
-                        ProjectName = "Project1",
-                        Status = Status.Running,
-                        Activity = Activity.Building
-                    };
+                    ProjectName = "Project1",
+                    Status = Status.Running,
+                    Activity = Activity.Building
+                };
 
-                    provider.ProjectInfoService.Save(projectInfo);
+                context.ProjectInfoService.Save(projectInfo);
 
-                    var projectBuild = new ProjectBuild
-                    {
-                        ProjectInfoId = projectInfo.Id,
-                        BuildTime = TimeHelper.Now
-                    };
+                var projectBuild = new ProjectBuild
+                {
+                    ProjectInfoId = projectInfo.Id,
+                    BuildTime = TimeHelper.Now
+                };
 
-                    provider.ProjectBuildService.Save(projectBuild);
+                context.ProjectBuildService.Save(projectBuild);
 
-                    var message = new TaskMessage
-                    {
-                        ProjectInfoId = projectInfo.Id,
-                        ProjectBuildId = projectBuild.Id,
-                        Time = TimeHelper.Now,
-                        Message = "This is a task message"
-                    };
+                var message = new TaskMessage
+                {
+                    ProjectInfoId = projectInfo.Id,
+                    ProjectBuildId = projectBuild.Id,
+                    Time = TimeHelper.Now,
+                    Message = "This is a task message"
+                };
 
-                    provider.TaskMessageService.WriteMessage(message);
+                context.TaskMessageService.WriteMessage(message);
 
-                    provider.Commit();
-                }
+                context.Commit();
 
             
                 var views = service.GetProjectViews();

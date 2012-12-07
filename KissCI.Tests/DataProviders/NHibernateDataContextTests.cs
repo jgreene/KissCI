@@ -24,7 +24,8 @@ namespace KissCI.Tests.DataProviders
         [TestMethod]
         public void CanSaveProjectInfo()
         {
-            using (var ctx = DataHelper.OpenContext())
+            using(var service = TestHelper.GetService())
+            using (var ctx = service.OpenContext())
             {
 
                 var srv = ctx.ProjectInfoService;
@@ -45,7 +46,8 @@ namespace KissCI.Tests.DataProviders
         [TestMethod]
         public void CanSaveProjectBuild()
         {
-            using (var ctx = DataHelper.OpenContext())
+            using (var service = TestHelper.GetService())
+            using (var ctx = service.OpenContext())
             {
 
                 var srv = ctx.ProjectBuildService;
@@ -89,20 +91,20 @@ namespace KissCI.Tests.DataProviders
         {
             using (var service = TestHelper.GetService())
             {
-                using (var context = DataHelper.OpenContext())
+                using (var context = service.OpenContext())
                 {
                     context.ConfigurationService.Save("test", "1");
                     context.Commit();
 
                 }
 
-                using (var context = DataHelper.OpenContext())
+                using (var context = service.OpenContext())
                 {
                     context.ConfigurationService.Remove("test");
                     context.Commit();
                 }
 
-                using (var context = DataHelper.OpenContext())
+                using (var context = service.OpenContext())
                 {
                     var value = context.ConfigurationService.Get("test");
 
