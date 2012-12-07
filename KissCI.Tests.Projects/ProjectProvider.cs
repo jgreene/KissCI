@@ -24,29 +24,14 @@ namespace KissCI.Tests.Projects
         {
             var current = DirectoryHelper.CurrentDirectory();
 
-            var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");
-
-            var fileTask = TaskHelper.Start()
-            .AddTask("Write file", (ctx, arg) => {
-                DirectoryHelper.CleanAndEnsureDirectory(writeTo);
-                var writeFile = Path.Combine(writeTo, "test.txt");
-                File.WriteAllText(writeFile, "Test");
-                return 1;
-            })
-            .Finalize();
-
-            var project = new Project("WriteFileProject", "IO Projects", fileTask);
-
-            yield return project;
-
             var sleepTask = TaskHelper.Start()
             .AddTask("Sleeping", (ctx, arg) => {
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
                 return 1;
             })
             .Finalize();
 
-            project = new Project("SleepProject", "Sleep Projects", sleepTask);
+            var project = new Project("SleepProject", "Sleep Projects", sleepTask);
             project.AddTimer(DateTime.Parse("09/08/2012 6:20:00 PM"));
 
             yield return project;

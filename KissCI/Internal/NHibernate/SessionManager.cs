@@ -14,6 +14,8 @@ namespace KissCI.NHibernate.Internal
 {
     public static class SessionManager
     {
+        static readonly object configLock = new object();
+        static readonly object factoryLock = new object();
 
         static IDictionary<string, Configuration> _configs = new Dictionary<string, Configuration>();
         static IDictionary<string, ISessionFactory> _factories = new Dictionary<string, ISessionFactory>();
@@ -30,59 +32,75 @@ namespace KissCI.NHibernate.Internal
 
         static ISessionFactory GetFactory(string root)
         {
-            if (_factories.ContainsKey(root))
-                return _factories[root];
+            lock (factoryLock)
+            {
+                if (_factories.ContainsKey(root))
+                    return _factories[root];
 
-            var config = GetConfig(root);
+                var config = GetConfig(root);
 
-            var fact = config.BuildSessionFactory();
+                var fact = config.BuildSessionFactory();
 
-            _factories.Add(root, fact);
+                _factories.Add(root, fact);
 
-            return fact;
+                return fact;
+            }
         }
 
         static Configuration GetConfig(string root)
         {
-            if (_configs.ContainsKey(root))
-                return _configs[root];
+            lock (configLock)
+            {
+                if (_configs.ContainsKey(root))
+                    return _configs[root];
 
-            var connectionString = GetConnectionString(root);
+                var connectionString = GetConnectionString(root);
 
-            var config = Fluently.Configure()
-                        .Database(
-                            SQLiteConfiguration.Standard.ConnectionString(connectionString)
-                        )
-                        .Mappings(m =>
-                        {
-                            m.FluentMappings.Add<ProjectInfoMap>();
-                            m.FluentMappings.Add<ProjectBuildMap>();
-                            m.FluentMappings.Add<TaskMessageMap>();
-                            m.FluentMappings.Add<ConfigurationItemMap>();
-                        })
-                        .ExposeConfiguration(cfg => {
-                            var filePath = GetDbFile(root);
-                            if (File.Exists(filePath) == false)
+                var config = Fluently.Configure()
+                            .Database(
+                                SQLiteConfiguration.Standard.ConnectionString(connectionString)
+                            )
+                            .Mappings(m =>
                             {
-                                using (var file = File.Create(filePath)) { }
-                                new SchemaUpdate(cfg).Execute(false, true);
-                                //new SchemaExport(cfg).Execute(false, true, true);
-                            }else{
-                                new SchemaUpdate(cfg).Execute(false, true);
-                            }
-                            
-                        })
-                        .BuildConfiguration();
+                                m.FluentMappings.Add<ProjectInfoMap>();
+                                m.FluentMappings.Add<ProjectBuildMap>();
+                                m.FluentMappings.Add<TaskMessageMap>();
+                                m.FluentMappings.Add<ConfigurationItemMap>();
+                            })
+                            .ExposeConfiguration(cfg =>
+                            {
+                                var filePath = GetDbFile(root);
+                                if (File.Exists(filePath) == false)
+                                {
+                                    using (var file = File.Create(filePath)) { }
+                                    new SchemaUpdate(cfg).Execute(false, true);
+                                    //new SchemaExport(cfg).Execute(false, true, true);
+                                }
+                                else
+                                {
+                                    new SchemaUpdate(cfg).Execute(false, true);
+                                }
 
-            _configs.Add(root, config);
+                            })
+                            .BuildConfiguration();
 
-            return config;
+                _configs.Add(root, config);
+
+                return config;
+            }
         }
 
         public static void Clear()
         {
-            _configs.Clear();
-            _factories.Clear();
+            lock (configLock)
+            {
+                _configs.Clear();
+            }
+
+            lock (factoryLock)
+            {
+                _factories.Clear();
+            }
         }
 
         public static ISession GetSession(string root)

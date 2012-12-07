@@ -35,20 +35,11 @@ namespace KissCI.Tests.Domain
         [TestMethod]
         public void CanRunProject()
         {
-            var current = DirectoryHelper.ExecutingDirectory();
-            var writeTo = Path.Combine(current.FullName, "TempProjectDirectory");
-
-            DirectoryHelper.CleanAndEnsureDirectory(writeTo);
-            var file = Path.Combine(writeTo, "test.txt");
-
             using (var service = TestHelper.GetService())
             {
-                var project = service.RunProject("WriteFileProject");
+                var project = service.RunProject("Project1");
 
-                Thread.Sleep(500);
-
-                var fileContents = File.ReadAllText(file);
-                Assert.IsNotNull(fileContents);
+                Assert.IsTrue(project);
             }
         }
 
