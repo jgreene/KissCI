@@ -11,12 +11,26 @@ namespace KissCI.Tests.Helpers
 {
     public static class DataHelper
     {
+        static readonly object cleanLock = new object();
+
         public static void CleanDb()
         {
-            SessionManager.Clear();
-            var executableDirectory = DirectoryHelper.ExecutingDirectory();
-            var dbPath = Path.Combine(executableDirectory.FullName, "KissCI.db3");
-            File.Delete(dbPath);
+            lock (cleanLock)
+            {
+                SessionManager.Clear();
+                var executableDirectory = DirectoryHelper.ExecutingDirectory();
+                var dbPath = Path.Combine(executableDirectory.FullName, "KissCI.db3");
+
+                try
+                {
+                    File.Delete(dbPath);
+                }
+                catch
+                {
+                    try { File.Delete(dbPath); }
+                    catch { }
+                }
+            }
         }
     }
 }
