@@ -27,7 +27,7 @@ namespace KissCI.NHibernate.Internal
 
         static string GetConnectionString(string root)
         {
-            return string.Format("Data Source={0};Version=3;New=True;FailIfMissing=False", GetDbFile(root));
+            return string.Format("Data Source={0};Version=3;New=True;FailIfMissing=False;Pooling=False;", GetDbFile(root));
         }
 
         static ISessionFactory GetFactory(string root)
