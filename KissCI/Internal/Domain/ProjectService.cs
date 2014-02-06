@@ -51,7 +51,7 @@ namespace KissCI.Internal.Domain
             EnsureProjectInfos();
         }
 
-        string _projectFolder;
+        readonly string _projectFolder;
 
         void EnsureFolders()
         {
@@ -102,11 +102,11 @@ namespace KissCI.Internal.Domain
                     trigger.Stop();
         }
 
-        string _directoryRoot;
-        IProjectFactory _factory;
-        Func<IDataContext> _dataProvider;
+        readonly string _directoryRoot;
+        readonly IProjectFactory _factory;
+        readonly Func<IDataContext> _dataProvider;
 
-        IList<Project> _registeredProjects = new List<Project>();
+        readonly IList<Project> _registeredProjects = new List<Project>();
 
         void UpdateInfo(IDataContext ctx, Project project, IList<ProjectInfo> infos, bool isRegistration = false)
         {

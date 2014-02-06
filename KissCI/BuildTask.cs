@@ -63,9 +63,10 @@ namespace KissCI
 
             Console.WriteLine(message);
         }
-
-        public void Log(string message)
+        
+        public void Log(string format, params object[] parameters)
         {
+            var message = string.Format(format, parameters);
             using (var ctx = _projectService.OpenContext())
             {
                 ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
@@ -82,13 +83,8 @@ namespace KissCI
 
             Console.WriteLine(message);
         }
-        
-        public void Log(string format, params object[] parameters)
-        {
-            Log(string.Format(format, parameters));
-        }
 
-        IList<Action> _cleanupActions = new List<Action>();
+        readonly IList<Action> _cleanupActions = new List<Action>();
 
         public void RegisterCleanup(Action act)
         {
@@ -124,22 +120,22 @@ namespace KissCI
         }
     }
 
-    public class BuildTask<TArg, TResult>
+    public class KissTask<TArg, TResult>
     {
-        public BuildTask(int count, string taskName, Func<TaskContext, TArg, TResult> binder)
+        public KissTask(int count, string taskName, Func<TaskContext, TArg, TResult> binder)
         {
             _binder = binder;
             _count = count;
             _taskName = taskName;
         }
 
-        int _count;
-        string _taskName;
+        readonly int _count;
+        readonly string _taskName;
 
         public int Count { get { return _count; } }
         public string Name { get { return _taskName; } }
 
-        Func<TaskContext, TArg, TResult> _binder;
+        readonly Func<TaskContext, TArg, TResult> _binder;
         public Func<TaskContext, TArg, TResult> Binder { get { return _binder; } }
     }
 }
