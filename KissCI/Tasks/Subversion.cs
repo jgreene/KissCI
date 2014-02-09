@@ -57,7 +57,7 @@ namespace KissCI.Tasks
             return _subversionPath;
         }
 
-        public static BuildTask<TArg, SubversionResult> Subversion<TArg, TResult>(this BuildTask<TArg, TResult> t, string trunkUrl, string destination, string userName = null, string password = null)
+        public static KissTask<TArg, SubversionResult> Subversion<TArg, TResult>(this KissTask<TArg, TResult> t, string trunkUrl, string destination, string userName = null, string password = null)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -87,7 +87,7 @@ namespace KissCI.Tasks
         }
         
 
-        public static BuildTask<TArg, SubversionResult> Subversion<TArg>(this BuildTask<TArg, SubversionArgs> t)
+        public static KissTask<TArg, SubversionResult> Subversion<TArg>(this KissTask<TArg, SubversionArgs> t)
         {
             return t.AddTask("Subversion checkout", (ctx, arg) =>
             {

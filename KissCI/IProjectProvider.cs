@@ -13,6 +13,6 @@ namespace KissCI
 
     public interface IProjectProvider
     {
-        IEnumerable<Project> Projects(IConfiguration config);
+        IEnumerable<KissProject> Projects(IConfiguration config);
     }
 }

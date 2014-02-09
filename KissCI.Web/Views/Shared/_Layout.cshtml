@@ -1,50 +1,63 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
+
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8" />
+    <meta name="google" content="notranslate" />
+    <meta http-equiv="Content-Language" content="en_US" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
+
+    @Url.Content("/content/bootstrap/css/bootstrap.css")
+    @Url.Content("/content/dashboard.css")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">KissCI</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              @if(ViewContext.RouteData.Values["controller"].ToString() == "Project"){
-                <li class="active"><a href="/">Projects</a></li>
-              }else{
-                <li><a href="/">Projects</a></li>   
-              }
-
-              @if(ViewContext.RouteData.Values["controller"].ToString() == "Configuration"){
-                <li class="active"><a href="/Configuration">Configuration</a></li>
-              }else{
-                <li><a href="/Configuration">Configuration</a></li>
-              }
-              <li><a target="_blank" href="https://github.com/jgreene/KissCI">Github</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">JBS Autodeploy</a>
+            </div>
+            @*<div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Settings</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Help</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-right">
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </form>
+                </div>*@
         </div>
-      </div>
     </div>
+
     <div class="container-fluid">
-        <div class="row-fluid">
-            @RenderBody()
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    @*@{ Html.RenderAction("Categories", "Category"); }*@
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                @RenderBody()
+            </div>
         </div>
     </div>
-    
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/project")
-    @RenderSection("scripts", required: false)
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)*@
 </body>
 </html>

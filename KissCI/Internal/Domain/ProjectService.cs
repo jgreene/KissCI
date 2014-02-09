@@ -16,15 +16,15 @@ namespace KissCI.Internal.Domain
     public interface IProjectService : IDisposable
     {
         IEnumerable<string> GetCategories();
-        IList<Project> GetProjects();
+        IList<KissProject> GetProjects();
         IEnumerable<ProjectView> GetProjectViews();
         IEnumerable<ProjectBuild> GetBuilds(string projectName);
         ProjectBuild GetMostRecentBuild(string projectName);
         ProjectInfo GetProjectInfo(string projectName);
-        bool RunProject(string projectName);
-        bool CancelProject(string projectName);
+        bool RunProject(string projectName, string command);
+        bool CancelProject(string projectName, string command);
         IDataContext OpenContext();
-        void RegisterProject(Project project);
+        void RegisterProject(KissProject kissProject);
         void StopProject(string projectName);
         void StartProject(string projectName);
     }
@@ -80,42 +80,29 @@ namespace KissCI.Internal.Domain
             }
         }
 
-        void StartTriggers()
-        {
-            var projects = this.GetProjects();
-
-            foreach (var project in projects)
-            {
-                foreach (var trigger in project.Triggers)
-                {
-                    trigger.Start(() => this.RunProject(project.Name));
-                }
-            }
-        }
-
         void StopTriggers()
         {
             var projects = this.GetProjects();
 
-            foreach (var project in projects)
-                foreach (var trigger in project.Triggers)
-                    trigger.Stop();
+            var allTriggers = projects.NotNull().SelectMany(p => p.Commands.NotNull().SelectMany(c => c.Triggers));
+            foreach(var trigger in allTriggers)
+                trigger.Stop();
         }
 
         readonly string _directoryRoot;
         readonly IProjectFactory _factory;
         readonly Func<IDataContext> _dataProvider;
 
-        readonly IList<Project> _registeredProjects = new List<Project>();
+        readonly IList<KissProject> _registeredProjects = new List<KissProject>();
 
-        void UpdateInfo(IDataContext ctx, Project project, IList<ProjectInfo> infos, bool isRegistration = false)
+        void UpdateInfo(IDataContext ctx, KissProject kissProject, IList<ProjectInfo> infos, bool isRegistration = false)
         {
-            if (infos.Any(i => i.ProjectName == project.Name) == false)
+            if (infos.Any(i => i.ProjectName == kissProject.Name) == false)
             {
                 var info = new ProjectInfo
                 {
-                    ProjectName = project.Name,
-                    Category = project.Category,
+                    ProjectName = kissProject.Name,
+                    Category = kissProject.Category,
                     Activity = Activity.Sleeping,
                     Status = Status.Running
                 };
@@ -123,26 +110,26 @@ namespace KissCI.Internal.Domain
                 ctx.ProjectInfoService.Save(info);
 
                 if(isRegistration)
-                    _registeredProjects.Add(project);
+                    _registeredProjects.Add(kissProject);
             }
             else
             {
                 //we update the category just in case it's been modified
-                var info = infos.FirstOrDefault(i => i.ProjectName == project.Name);
+                var info = infos.FirstOrDefault(i => i.ProjectName == kissProject.Name);
                 if (info != null)
                 {
-                    info.Category = project.Category;
+                    info.Category = kissProject.Category;
                     ctx.ProjectInfoService.Save(info);
                 }
             }
         }
 
-        public void RegisterProject(Project project)
+        public void RegisterProject(KissProject kissProject)
         {
             using (var ctx = _dataProvider())
             {
                 var infos = ctx.ProjectInfoService.GetProjectInfos().ToList();
-                UpdateInfo(ctx, project, infos, true);
+                UpdateInfo(ctx, kissProject, infos, true);
 
                 ctx.Commit();
             }
@@ -150,7 +137,7 @@ namespace KissCI.Internal.Domain
 
         public IDataContext OpenContext() { return _dataProvider(); }
 
-        public IList<Project> GetProjects()
+        public IList<KissProject> GetProjects()
         {
             return _factory.FetchProjects().Concat(_registeredProjects).ToList();
         }
@@ -177,7 +164,7 @@ namespace KissCI.Internal.Domain
 
                     var project = GetProject(i.ProjectName);
 
-                    DateTime? nextBuildTime = project == null ? null : project.Triggers.OrderBy(t => t.NextBuild).Select(t => t.NextBuild).FirstOrDefault();
+                    DateTime? nextBuildTime = project == null ? null : project.Commands.SelectMany(c=>c.Triggers).OrderBy(t => t.NextBuild).Select(t => t.NextBuild).FirstOrDefault();
 
                     var view = new ProjectView
                     {
@@ -195,21 +182,13 @@ namespace KissCI.Internal.Domain
             }
         }
 
-        string GetDirectory(string projectName)
-        {
-            var proj = Path.Combine(_projectFolder, projectName);
-            EnsureDirectory(proj);
-
-            return proj;
-        }
-
         public void EnsureDirectory(string dir)
         {
             if (Directory.Exists(dir) == false)
                 Directory.CreateDirectory(dir);
         }
 
-        Project GetProject(string projectName)
+        KissProject GetProject(string projectName)
         {
             return GetProjects().FirstOrDefault(p => p.Name == projectName);
         }
@@ -252,10 +231,14 @@ namespace KissCI.Internal.Domain
             public Task Task { get; set; }
         }
 
-        public bool RunProject(string projectName)
+        public bool RunProject(string projectName, string command)
         {
             var project = GetProject(projectName);
             if (project == null)
+                return false;
+
+            var kissCommand = project.Commands.FirstOrDefault(c=> c.Name == command);
+            if(kissCommand == null)
                 return false;
 
             var tokenSource = new CancellationTokenSource();
@@ -263,7 +246,7 @@ namespace KissCI.Internal.Domain
 
                 try
                 {
-                    ProjectHelper.Run(project, this, tokenSource.Token);
+                    ProjectHelper.Run(project, kissCommand, this, tokenSource.Token);
                 }
                 finally
                 {
@@ -284,7 +267,7 @@ namespace KissCI.Internal.Domain
 
             if (_runningTasks.TryAdd(projectName, info) == false)
             {
-                return RunProject(projectName);
+                return RunProject(projectName, command);
             }
 
             task.Start();
@@ -293,7 +276,7 @@ namespace KissCI.Internal.Domain
             
         }
 
-        public bool CancelProject(string projectName)
+        public bool CancelProject(string projectName, string command)
         {
             using (var ctx = _dataProvider())
             {
@@ -341,7 +324,7 @@ namespace KissCI.Internal.Domain
 
                 ctx.ProjectInfoService.Save(info);
 
-                foreach (var trigger in project.Triggers)
+                foreach (var trigger in project.Commands.SelectMany(c=>c.Triggers))
                     trigger.Stop();
 
                 ctx.Commit();
@@ -358,8 +341,9 @@ namespace KissCI.Internal.Domain
                 info.Activity = Activity.Sleeping;
                 info.Status = Status.Running;
 
-                foreach (var trigger in project.Triggers)
-                    trigger.Start(() => RunProject(project.Name));
+                foreach (var command in project.Commands)
+                    foreach(var trigger in command.Triggers)
+                        trigger.Start(() => RunProject(project.Name, command.Name));
 
                 ctx.Commit();
             }

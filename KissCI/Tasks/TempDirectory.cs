@@ -62,7 +62,7 @@ namespace KissCI.Tasks
 
     public static class TempDirectoryExtensions
     {
-        public static BuildTask<TArg, TempDirectoryResult> CreateTempDirectory<TArg, TResult>(this BuildTask<TArg, TResult> t, string rootDirectory)
+        public static KissTask<TArg, TempDirectoryResult> CreateTempDirectory<TArg, TResult>(this KissTask<TArg, TResult> t, string rootDirectory)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -70,7 +70,7 @@ namespace KissCI.Tasks
             }).CreateTempDirectory();
         }
 
-        public static BuildTask<TArg, TempDirectoryResult> CreateTempDirectory<TArg>(this BuildTask<TArg, TempDirectoryArgs> t)
+        public static KissTask<TArg, TempDirectoryResult> CreateTempDirectory<TArg>(this KissTask<TArg, TempDirectoryArgs> t)
         {
             return t.AddTask("Create Temp Directory", (ctx, arg) =>
             {

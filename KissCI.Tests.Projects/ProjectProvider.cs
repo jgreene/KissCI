@@ -20,7 +20,7 @@ namespace KissCI.Tests.Projects
                     Directory.CreateDirectory(dir);
         }
 
-        public IEnumerable<Project> Projects(IConfiguration config)
+        public IEnumerable<KissProject> Projects(IConfiguration config)
         {
             var current = DirectoryHelper.CurrentDirectory();
 
@@ -31,10 +31,9 @@ namespace KissCI.Tests.Projects
             })
             .Finalize();
 
-            var project = new Project("SleepProject", "Sleep Projects", sleepTask);
-            project.AddTimer(DateTime.Parse("09/08/2012 6:20:00 PM"));
+            var sleepCommand = new KissCommand("build", sleepTask, new IntervalTrigger(DateTime.Parse("09/08/2012 6:20:00 PM")));
 
-            yield return project;
+            yield return new KissProject("SleepProject", "Sleep Projects", sleepCommand);
 
             var failTask = TaskHelper.Start()
             .AddTask("Fail", (ctx, arg) => {
@@ -43,9 +42,9 @@ namespace KissCI.Tests.Projects
             })
             .Finalize();
 
-            project = new Project("Fail project", "Fail Projects", failTask);
+            var failCommand = new KissCommand("build", failTask);
 
-            yield return project;
+            yield return new KissProject("Fail project", "Fail Projects", failCommand);
 
             var taskCounter = 1;
             var tasks = TaskHelper.Start()
@@ -56,8 +55,10 @@ namespace KissCI.Tests.Projects
             })
             .Finalize();
 
+            var taskCommand = new KissCommand("build", tasks);
+
             foreach(var p in Enumerable.Range(1, 5))
-                yield return new Project("Project" + p.ToString(), "UI", tasks);
+                yield return new KissProject("Project" + p.ToString(), "UI", taskCommand);
         }
     }
 }

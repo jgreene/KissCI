@@ -12,7 +12,7 @@ namespace KissCI.Internal
 {
     public interface IProjectFactory
     {
-        IList<Project> FetchProjects();
+        IList<KissProject> FetchProjects();
     }
 
     public class MainProjectFactory : IProjectFactory
@@ -26,7 +26,7 @@ namespace KissCI.Internal
         }
 
         readonly string _directory;
-        IList<Project> _projects = new List<Project>();
+        IList<KissProject> _projects = new List<KissProject>();
 
 
         void LoadAssemblies()
@@ -68,7 +68,7 @@ namespace KissCI.Internal
             _projects = providers.SelectMany(p => p.Projects(null)).ToList();
         }
 
-        public IList<Project> FetchProjects()
+        public IList<KissProject> FetchProjects()
         {
             return _projects;
         }

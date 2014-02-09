@@ -37,7 +37,7 @@ namespace KissCI.Tests.Domain
         {
             using (var service = TestHelper.GetService())
             {
-                var project = service.RunProject("Project1");
+                var project = service.RunProject("Project1", "build");
 
                 Assert.IsTrue(project);
             }
@@ -49,11 +49,11 @@ namespace KissCI.Tests.Domain
             using (var service = TestHelper.GetService())
             {
                 var project = "SleepProject";
-                service.RunProject(project);
+                service.RunProject(project, "build");
 
                 Thread.Sleep(500);
 
-                Assert.IsTrue(service.CancelProject(project));
+                Assert.IsTrue(service.CancelProject(project, "build"));
                 
             }
         }

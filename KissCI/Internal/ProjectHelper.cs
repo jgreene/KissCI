@@ -12,23 +12,15 @@ namespace KissCI.Internal.Helpers
 {
     public static class ProjectHelper
     {
-        static string GetLogFileName(string directory, string projectName, DateTime time)
+        public static void Run(KissProject kissProject, KissCommand command, IProjectService projectService, CancellationToken? token = null)
         {
-            var date = time.ToString("yyyy-MM-dd_hh-mm-ss");
-            var unique = Guid.NewGuid().ToString().Split('-')[0];
-            var fileName = string.Format("{0}_{1}_{2}.txt", projectName, date, unique);
-            return Path.Combine(directory, fileName);
-        }
+            if (kissProject == null)
+                throw new ArgumentNullException("kissProject");
 
-        public static void Run(Project project, IProjectService projectService, CancellationToken? token = null)
-        {
-            if (project == null)
-                throw new NullReferenceException("Project was null");
+            if(command == null)
+                throw new ArgumentNullException("command");
 
-            if (project.Tasks == null)
-                throw new NullReferenceException("Project has no tasks to run");
-
-            ProjectInfo info = projectService.GetProjectInfo(project.Name);
+            ProjectInfo info = projectService.GetProjectInfo(kissProject.Name);
 
             if (info.Status == Status.Stopped)
                 throw new Exception("Project can not be built as it is currently stopped.  Reactivate the project to build it.");
@@ -67,7 +59,7 @@ namespace KissCI.Internal.Helpers
                 }
             });
 
-            var context = new TaskContext(projectService, info, build, project.Tasks.Count, token);
+            var context = new TaskContext(projectService, info, build, command.Tasks.Count, token);
 
             context.LogMessage("Beginning tasks for {0}", context.ProjectName);
 
@@ -75,7 +67,7 @@ namespace KissCI.Internal.Helpers
 
             try
             {
-                project.Tasks.Binder(context, new BuildTaskStart());
+                command.Tasks.Binder(context, new BuildTaskStart());
 
                 setBuildStatus(BuildResult.Success);
             }

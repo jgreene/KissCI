@@ -31,13 +31,15 @@ namespace KissCI.Tests.Tasks
             .Subversion("http://openjpeg.googlecode.com/svn/trunk/", outputDirectory)
             .Finalize();
 
-            var project = new Project("TestProject", "UI", tasks);
+            var command = new KissCommand("build", tasks);
+
+            var project = new KissProject("TestProject", "UI", command);
 
             using (var projectService = TestHelper.GetService())
             {
                 projectService.RegisterProject(project);
 
-                ProjectHelper.Run(project, projectService);
+                ProjectHelper.Run(project, command, projectService);
 
                 var output = new DirectoryInfo(outputDirectory);
 

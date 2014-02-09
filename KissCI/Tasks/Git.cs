@@ -20,7 +20,7 @@ namespace KissCI.Tasks
 
     public static class GitExtensions
     {
-        public static BuildTask<TArg, GitResult> Git<TArg, TResult>(this BuildTask<TArg, TResult> t, string repositoryUrl, string destination)
+        public static KissTask<TArg, GitResult> Git<TArg, TResult>(this KissTask<TArg, TResult> t, string repositoryUrl, string destination)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -38,7 +38,7 @@ namespace KissCI.Tasks
             return string.Format("--git-dir=\"{0}\\.git\" pull", arg.OutputDirectory);
         }
 
-        public static BuildTask<TArg, GitResult> Git<TArg>(this BuildTask<TArg, GitArgs> t)
+        public static KissTask<TArg, GitResult> Git<TArg>(this KissTask<TArg, GitArgs> t)
         {
             return t.AddTask("Git checkout", (ctx, arg) =>
             {

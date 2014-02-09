@@ -36,12 +36,14 @@ namespace KissCI.Tests.Tasks
             .MsTest(testDll, testResultsPath)
             .Finalize();
 
-            var project = new Project("TestProject", "UI", tasks);
+            var command = new KissCommand("build", tasks);
+
+            var project = new KissProject("TestProject", "UI", command);
 
             using (var projectService = TestHelper.GetService())
             {
                 projectService.RegisterProject(project);
-                ProjectHelper.Run(project, projectService);
+                ProjectHelper.Run(project, command, projectService);
             }
 
             Assert.IsTrue(File.Exists(testResultsPath));

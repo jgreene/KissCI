@@ -1,4 +1,7 @@
-﻿@model Tuple<string, IEnumerable<KissCI.Internal.Domain.ProjectView>>
+﻿@using System;
+@using System.Collections.Generic;
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Tuple<string, IEnumerable<KissCI.Internal.Domain.ProjectView>>>
 
 @{
     ViewBag.Title = "Projects";

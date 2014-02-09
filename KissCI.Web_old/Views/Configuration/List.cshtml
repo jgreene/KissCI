@@ -1,0 +1,11 @@
+﻿@model IEnumerable<KeyValuePair<string,string>>
+
+@{
+    ViewBag.Title = "Configuration";
+}
+
+<h2>Configuration</h2>
+
+<div class="span9 configuration-container">
+    @{ Html.RenderPartial("ConfigurationViewTable", Model); }
+</div>

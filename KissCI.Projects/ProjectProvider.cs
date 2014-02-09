@@ -21,7 +21,7 @@ namespace KissCI.Projects
                     Directory.CreateDirectory(dir);
         }
 
-        Project GetServiceProject()
+        KissProject GetServiceProject()
         {
             var root = @"C:\Projects\Builds\";
             var sourceRoot = Path.Combine(root, "Source");
@@ -82,13 +82,13 @@ namespace KissCI.Projects
             .GithubUpload()
             .Finalize();
 
-            var project = new Project("KissCI.Service", "Services", serviceTask);
-            project.AddTimer(TimeHelper.Now);
-            return project;
+            var serviceCommand = new KissCommand("build", serviceTask, new IntervalTrigger(TimeHelper.Now));
+
+            return new KissProject("KissCI.Service", "Services", serviceCommand);
         }
 
 
-        public IEnumerable<Project> Projects(IConfiguration config)
+        public IEnumerable<KissProject> Projects(IConfiguration config)
         {
             yield return GetServiceProject();
         }

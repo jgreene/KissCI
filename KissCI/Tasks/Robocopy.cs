@@ -33,7 +33,7 @@ namespace KissCI.Tasks
 
     public static class RobocopyExtensions
     {
-        public static BuildTask<TArg, RobocopyResult> Robocopy<TArg, TResult>(this BuildTask<TArg, TResult> t, string sourceDirectory, string destinationDirectory, string args = null)
+        public static KissTask<TArg, RobocopyResult> Robocopy<TArg, TResult>(this KissTask<TArg, TResult> t, string sourceDirectory, string destinationDirectory, string args = null)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -41,7 +41,7 @@ namespace KissCI.Tasks
             }).Robocopy();
         }
 
-        public static BuildTask<TArg, RobocopyResult> Robocopy<TArg>(this BuildTask<TArg, RobocopyArgs> t)
+        public static KissTask<TArg, RobocopyResult> Robocopy<TArg>(this KissTask<TArg, RobocopyArgs> t)
         {
             return t.AddTask("Robocopy", (ctx, arg) =>
             {

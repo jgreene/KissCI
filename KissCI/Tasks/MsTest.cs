@@ -54,7 +54,7 @@ namespace KissCI.Tasks
             return _msTestPath;
         }
 
-        public static BuildTask<TArg, MsTestResult> MsTest<TArg, TResult>(this BuildTask<TArg, TResult> t, string assemblyPath, string resultsFile, string testConfig = null)
+        public static KissTask<TArg, MsTestResult> MsTest<TArg, TResult>(this KissTask<TArg, TResult> t, string assemblyPath, string resultsFile, string testConfig = null)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -62,7 +62,7 @@ namespace KissCI.Tasks
             }).MsTest();
         }
 
-        public static BuildTask<TArg, MsTestResult> MsTest<TArg>(this BuildTask<TArg, MsTestArgs> t)
+        public static KissTask<TArg, MsTestResult> MsTest<TArg>(this KissTask<TArg, MsTestArgs> t)
         {
             return t.AddTask("MsTest", (ctx, arg) =>
             {

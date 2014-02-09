@@ -20,7 +20,7 @@ namespace KissCI.Tasks
 
     public static class ZipFileExtensions
     {
-        public static BuildTask<TArg, ZipResult> Zip<TArg, TResult>(this BuildTask<TArg, TResult> t, string directoryPath, string filePath)
+        public static KissTask<TArg, ZipResult> Zip<TArg, TResult>(this KissTask<TArg, TResult> t, string directoryPath, string filePath)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -28,7 +28,7 @@ namespace KissCI.Tasks
             }).Zip();
         }
 
-        public static BuildTask<TArg, ZipResult> Zip<TArg>(this BuildTask<TArg, ZipArgs> t)
+        public static KissTask<TArg, ZipResult> Zip<TArg>(this KissTask<TArg, ZipArgs> t)
         {
             return t.AddTask("Zip directory", (ctx, arg) =>
             {

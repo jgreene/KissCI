@@ -34,7 +34,7 @@ namespace KissCI.Tasks
 
     public static class MsBuild
     {
-        public static BuildTask<TArg, MsBuildResult> TempMsBuild4_0<TArg, TResult>(this BuildTask<TArg, TResult> t, string tempRoot, string projectFile, string configuration)
+        public static KissTask<TArg, MsBuildResult> TempMsBuild4_0<TArg, TResult>(this KissTask<TArg, TResult> t, string tempRoot, string projectFile, string configuration)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -45,7 +45,7 @@ namespace KissCI.Tasks
             }).MsBuild4_0();
         }
 
-        public static BuildTask<TArg, MsBuildResult> MsBuild4_0<TArg, TResult>(this BuildTask<TArg, TResult> t, string projectFile, string outputPath, string configuration)
+        public static KissTask<TArg, MsBuildResult> MsBuild4_0<TArg, TResult>(this KissTask<TArg, TResult> t, string projectFile, string outputPath, string configuration)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -54,7 +54,7 @@ namespace KissCI.Tasks
         }
 
         const string MsBuildPath = @"c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe";
-        public static BuildTask<TArg, MsBuildResult> MsBuild4_0<TArg>(this BuildTask<TArg, MsBuildArgs> t)
+        public static KissTask<TArg, MsBuildResult> MsBuild4_0<TArg>(this KissTask<TArg, MsBuildArgs> t)
         {
             return t.AddTask("MsBuild", (ctx, arg) =>
             {

@@ -27,7 +27,7 @@ namespace KissCI.Projects.Tasks
 
     public static class GithubUploaderExtensions
     {
-        public static BuildTask<TArg, GithubUploaderResult> GithubUpload<TArg, TResult>(this BuildTask<TArg, TResult> t, string owner, string repository, string username, string password, string filePath, string description = null)
+        public static KissTask<TArg, GithubUploaderResult> GithubUpload<TArg, TResult>(this KissTask<TArg, TResult> t, string owner, string repository, string username, string password, string filePath, string description = null)
         {
             return t.AddStep((ctx, arg) =>
             {
@@ -41,7 +41,7 @@ namespace KissCI.Projects.Tasks
             }).GithubUpload();
         }
 
-        public static BuildTask<TArg, GithubUploaderResult> GithubUpload<TArg>(this BuildTask<TArg, GithubUploaderArgs> t)
+        public static KissTask<TArg, GithubUploaderResult> GithubUpload<TArg>(this KissTask<TArg, GithubUploaderArgs> t)
         {
             return t.AddTask("Github upload", (ctx, arg) =>
             {

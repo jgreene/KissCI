@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 using System.Configuration;
-using NDesk.Options;
 using KissCI.Helpers;
+using NDesk.Options;
 
 namespace KissCI.Service
 {
