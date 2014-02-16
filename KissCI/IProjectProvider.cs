@@ -5,14 +5,9 @@ using System.Text;
 
 namespace KissCI
 {
-    public interface IConfiguration
-    {
-        string Get(string key);
-        T Get<T>(string key);
-    }
 
     public interface IProjectProvider
     {
-        IEnumerable<KissProject> Projects(IConfiguration config);
+        IEnumerable<KissProject> Projects();
     }
 }

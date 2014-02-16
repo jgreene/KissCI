@@ -88,7 +88,7 @@ namespace KissCI.Projects
         }
 
 
-        public IEnumerable<KissProject> Projects(IConfiguration config)
+        public IEnumerable<KissProject> Projects()
         {
             yield return GetServiceProject();
         }

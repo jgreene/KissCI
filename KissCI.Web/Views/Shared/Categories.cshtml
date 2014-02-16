@@ -1,0 +1,15 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
+
+<div class="well sidebar-nav">
+    <ul class="nav nav-list">
+        
+        <li class="nav-header">Categories</li>
+        <li><a href="/">All</a></li>
+        @foreach (string cat in ViewBag.Categories)
+        {
+            <li>
+                <a href="/@cat">@cat</a>
+            </li>
+        }
+    </ul>
+</div>

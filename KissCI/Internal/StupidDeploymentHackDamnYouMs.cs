@@ -11,9 +11,7 @@ namespace KissCI.Internal
         {
             try
             {
-                new System.Data.SQLite.SQLiteException();
-
-                throw new Exception("This class should never be called or instantiated");
+                throw new System.Data.SQLite.SQLiteException("This class should never be called or instantiated");
             }
             catch { }
         }

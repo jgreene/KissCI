@@ -53,7 +53,7 @@ namespace KissCI.Tests.Domain
 
                 Thread.Sleep(500);
 
-                Assert.IsTrue(service.CancelProject(project, "build"));
+                Assert.IsTrue(service.CancelProject(project));
                 
             }
         }

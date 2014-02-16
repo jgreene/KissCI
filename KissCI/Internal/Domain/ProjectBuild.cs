@@ -32,16 +32,27 @@ namespace KissCI.Internal.Domain
         TaskMessage
     }
 
+    public enum LogType : long
+    {
+        All = 0,
+        Trace = 1,
+        Debug = 2,
+        Info = 3,
+        Warn = 4,
+        Error = 5,
+        Fatal = 6,
+        Off = 7,
+    }
+
     public class TaskMessage
     {
-        
-
         public virtual long Id { get; set; }
         public virtual long ProjectBuildId { get; set; }
         public virtual long ProjectInfoId { get; set; }
         public virtual DateTime Time { get; set; }
         public virtual string Message { get; set; }
         public virtual MessageType Type { get; set; }
+        public virtual LogType LogType { get; set; }
     }
 
     public class ProjectBuild
@@ -50,7 +61,7 @@ namespace KissCI.Internal.Domain
         public virtual long ProjectInfoId { get; set; }
         public virtual DateTime BuildTime { get; set; }
         public virtual DateTime? CompleteTime { get; set; }
-        public virtual Nullable<BuildResult> BuildResult { get; set; }
+        public virtual BuildResult? BuildResult { get; set; }
     }
 
     public class ProjectInfo
@@ -64,6 +75,7 @@ namespace KissCI.Internal.Domain
 
     public class ProjectView
     {
+        public string[] Commands { get; set; }
         public ProjectInfo Info { get; set; }
 
         public ProjectBuild LastBuild { get; set; }

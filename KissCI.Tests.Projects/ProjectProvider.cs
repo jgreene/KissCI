@@ -20,7 +20,7 @@ namespace KissCI.Tests.Projects
                     Directory.CreateDirectory(dir);
         }
 
-        public IEnumerable<KissProject> Projects(IConfiguration config)
+        public IEnumerable<KissProject> Projects()
         {
             var current = DirectoryHelper.CurrentDirectory();
 

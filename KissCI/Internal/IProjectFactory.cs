@@ -65,7 +65,7 @@ namespace KissCI.Internal
 
             var providers = providerTypes.Select(p => (IProjectProvider)Activator.CreateInstance(p));
 
-            _projects = providers.SelectMany(p => p.Projects(null)).ToList();
+            _projects = providers.SelectMany(p => p.Projects()).ToList();
         }
 
         public IList<KissProject> FetchProjects()

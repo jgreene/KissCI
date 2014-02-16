@@ -42,6 +42,7 @@ namespace KissCI.NHibernate.Internal.Mappings
             Map(x => x.Time);
             Map(x => x.Message);
             Map(x => x.Type);
+            Map(x => x.LogType);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using KissCI.Helpers;
+﻿using Common.Logging;
+using KissCI.Helpers;
 using KissCI.Internal;
 using KissCI.Internal.Domain;
 using System;
@@ -19,6 +20,7 @@ namespace KissCI
             IProjectService projectService, 
             ProjectInfo info, 
             ProjectBuild build,
+            ILog logger,
             int taskCount,
             CancellationToken? token)
         {
@@ -33,17 +35,21 @@ namespace KissCI
             _projectService = projectService;
             _info = info;
             _build = build;
+            _logger = logger;
             _token = token;
         }
 
         readonly int _taskCount;
         readonly ProjectInfo _info;
         readonly ProjectBuild _build;
+        readonly ILog _logger;
         readonly IProjectService _projectService;
         readonly CancellationToken? _token;
 
         public string ProjectName { get { return _info.ProjectName; } }
         public int TaskCount { get { return _taskCount; } }
+
+        public ILog Logger { get { return _logger; } }
 
         internal void LogMessage(string format, params object[] parameters)
         {
@@ -56,7 +62,8 @@ namespace KissCI
                     ProjectBuildId = _build.Id,
                     Time = TimeHelper.Now,
                     Message = message,
-                    Type = MessageType.TaskMessage
+                    Type = MessageType.TaskMessage,
+                    LogType = LogType.Info
                 });
                 ctx.Commit();
             }
@@ -65,23 +72,8 @@ namespace KissCI
         }
         
         public void Log(string format, params object[] parameters)
-        {
-            var message = string.Format(format, parameters);
-            using (var ctx = _projectService.OpenContext())
-            {
-                ctx.TaskMessageService.WriteMessage(new Internal.Domain.TaskMessage
-                {
-                    ProjectInfoId = _info.Id,
-                    ProjectBuildId = _build.Id,
-                    Time = TimeHelper.Now,
-                    Message = message,
-                    Type = MessageType.LogMessage
-                });
-
-                ctx.Commit();
-            }
-
-            Console.WriteLine(message);
+        {         
+            _logger.InfoFormat(format, parameters);
         }
 
         readonly IList<Action> _cleanupActions = new List<Action>();
@@ -102,7 +94,7 @@ namespace KissCI
                 }
                 catch (Exception ex)
                 {
-                    Log("Cleanup failed on with an exception of: {0}", ex);
+                    _logger.ErrorFormat("Cleanup failed on with an exception of: {0}", ex);
                     exceptions.Add(ex);
                 }
             }

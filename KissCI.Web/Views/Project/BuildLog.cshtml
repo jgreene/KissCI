@@ -1,11 +1,16 @@
-﻿@model KissCI.Web.Models.Project.BuildLogView
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<KissCI.Web.Models.Project.BuildLogView>
 
 @{
     ViewBag.Title = "Build Log";
+    Layout = "Shared/_Layout";
 }
 
 <h4>@Model.Info.Category</h4>
-<h1>@Model.Info.ProjectName</h1>
+<h1 class="page-header"><a href="@Url.Content("/project/" + Model.Info.ProjectName + "/builds")">@Model.Info.ProjectName</a></h1>
 
 <div>
     @if (Model.Build.BuildResult.HasValue)
@@ -16,7 +21,7 @@
         }
         else if (Model.Build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Failure)
         {
-            <h3 class="text-error">Failure</h3>
+            <h3 class="text-danger">Failure</h3>
         }
         else if (Model.Build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Cancelled)
         {
@@ -26,9 +31,9 @@
 
 </div>
 
-<div class="span12">
+<div class="table-responsive">
     <h5>Summary</h5>
-    <table class="table table-condensed">
+    <table class="table table table-striped">
         <thead>
             <tr>
                 <th></th>
@@ -40,16 +45,16 @@
             {
                 <tr>
                     <td>@msg.Time.ToString()</td>
-                    <td>@Html.Raw(msg.Message)</td>
+                    <td>@(msg.Message == null ? "" : msg.Message)</td>
                 </tr>
-                
+
             }
         </tbody>
     </table>
 
-    <div class="log">
+    <div class="table-responsive">
         <h5>Log</h5>
-        <table class="table table-condensed">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th></th>
@@ -59,11 +64,12 @@
             <tbody>
                 @foreach (var msg in Model.Logs)
                 {
-                    <tr>
+
+                    <tr class="@(msg.LogType == KissCI.Internal.Domain.LogType.Error ? "danger" : "")">
                         <td>@msg.Time.ToString()</td>
-                        <td>@Html.Raw(msg.Message)</td>
+                        <td>@msg.Message</td>
                     </tr>
-                
+
                 }
             </tbody>
         </table>

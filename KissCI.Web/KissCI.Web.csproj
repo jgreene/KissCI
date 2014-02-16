@@ -41,105 +41,96 @@
   <ItemGroup>
     <Reference Include="Nancy, Version=0.22.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.0.22.0\lib\net40\Nancy.dll</HintPath>
+      <HintPath>..\Libraries\Nancy\Nancy.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Hosting.Self, Version=0.22.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.Hosting.Self.0.22.0\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+      <HintPath>..\Libraries\Nancy\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.ViewEngines.Razor, Version=0.22.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.Viewengines.Razor.0.22.0\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
+      <HintPath>..\Libraries\Nancy\Nancy.ViewEngines.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Razor.Unofficial">
-      <HintPath>..\packages\System.Web.Razor.Unofficial.2.0.2\lib\net40\System.Web.Razor.Unofficial.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.Razor.Unofficial, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Nancy\System.Web.Razor.Unofficial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="KissCIBootstrapper.cs" />
+    <Compile Include="Internal\EmbeddedFileResponse.cs" />
+    <Compile Include="KissCIConfiguration.cs" />
     <Compile Include="Models\Project\BuildLogView.cs" />
     <Compile Include="Models\Project\ProjectBuildView.cs" />
+    <Compile Include="Models\Project\ProjectListView.cs" />
     <Compile Include="Modules\CategoryModule.cs" />
     <Compile Include="Modules\ProjectModule.cs" />
+    <Compile Include="Modules\StaticModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Content\bootstrap\css\bootstrap-theme.css.map" />
-    <None Include="Content\bootstrap\css\bootstrap.css.map" />
-    <None Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <None Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <None Include="Content\bootstrap\less\alerts.less" />
-    <None Include="Content\bootstrap\less\badges.less" />
-    <None Include="Content\bootstrap\less\bootstrap.less" />
-    <None Include="Content\bootstrap\less\breadcrumbs.less" />
-    <None Include="Content\bootstrap\less\button-groups.less" />
-    <None Include="Content\bootstrap\less\buttons.less" />
-    <None Include="Content\bootstrap\less\carousel.less" />
-    <None Include="Content\bootstrap\less\close.less" />
-    <None Include="Content\bootstrap\less\code.less" />
-    <None Include="Content\bootstrap\less\component-animations.less" />
-    <None Include="Content\bootstrap\less\dropdowns.less" />
-    <None Include="Content\bootstrap\less\forms.less" />
-    <None Include="Content\bootstrap\less\glyphicons.less" />
-    <None Include="Content\bootstrap\less\grid.less" />
-    <None Include="Content\bootstrap\less\input-groups.less" />
-    <None Include="Content\bootstrap\less\jumbotron.less" />
-    <None Include="Content\bootstrap\less\labels.less" />
-    <None Include="Content\bootstrap\less\list-group.less" />
-    <None Include="Content\bootstrap\less\media.less" />
-    <None Include="Content\bootstrap\less\mixins.less" />
-    <None Include="Content\bootstrap\less\modals.less" />
-    <None Include="Content\bootstrap\less\navbar.less" />
-    <None Include="Content\bootstrap\less\navs.less" />
-    <None Include="Content\bootstrap\less\normalize.less" />
-    <None Include="Content\bootstrap\less\pager.less" />
-    <None Include="Content\bootstrap\less\pagination.less" />
-    <None Include="Content\bootstrap\less\panels.less" />
-    <None Include="Content\bootstrap\less\popovers.less" />
-    <None Include="Content\bootstrap\less\print.less" />
-    <None Include="Content\bootstrap\less\progress-bars.less" />
-    <None Include="Content\bootstrap\less\responsive-utilities.less" />
-    <None Include="Content\bootstrap\less\scaffolding.less" />
-    <None Include="Content\bootstrap\less\tables.less" />
-    <None Include="Content\bootstrap\less\theme.less" />
-    <None Include="Content\bootstrap\less\thumbnails.less" />
-    <None Include="Content\bootstrap\less\tooltip.less" />
-    <None Include="Content\bootstrap\less\type.less" />
-    <None Include="Content\bootstrap\less\utilities.less" />
-    <None Include="Content\bootstrap\less\variables.less" />
-    <None Include="Content\bootstrap\less\wells.less" />
+    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-theme.css.map" />
+    <EmbeddedResource Include="Content\bootstrap\css\bootstrap.css.map" />
+    <EmbeddedResource Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="Content\bootstrap\less\alerts.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\badges.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\bootstrap.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\breadcrumbs.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\button-groups.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\buttons.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\carousel.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\close.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\code.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\component-animations.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\dropdowns.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\forms.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\glyphicons.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\grid.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\input-groups.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\jumbotron.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\labels.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\list-group.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\media.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\mixins.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\modals.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\navbar.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\navs.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\normalize.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\pager.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\pagination.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\panels.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\popovers.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\print.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\progress-bars.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\responsive-utilities.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\scaffolding.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\tables.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\theme.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\thumbnails.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\tooltip.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\type.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\utilities.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\variables.less" />
+    <EmbeddedResource Include="Content\bootstrap\less\wells.less" />
+    <EmbeddedResource Include="Content\scripts\lib\jquery-1.11.0.min.map" />
+    <EmbeddedResource Include="Content\scripts\lib\underscore-min.map" />
     <None Include="packages.config" />
-    <None Include="Views\index.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="Views\Project\BuildLog.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Project\Categories.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Project\List.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Project\ProjectBuilds.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Project\ProjectBuildTable.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Project\ProjectViewTable.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Views\Shared\_Layout.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Views\index.cshtml" />
+    <EmbeddedResource Include="Views\Project\BuildLog.cshtml" />
+    <EmbeddedResource Include="Views\Shared\Categories.cshtml" />
+    <EmbeddedResource Include="Views\Category\List.cshtml" />
+    <EmbeddedResource Include="Views\Project\ProjectBuilds.cshtml" />
+    <EmbeddedResource Include="Views\Project\ProjectBuildTable.cshtml" />
+    <EmbeddedResource Include="Views\Category\ProjectViewTable.cshtml" />
+    <EmbeddedResource Include="Views\Project\index.cshtml" />
+    <EmbeddedResource Include="Views\Shared\_Layout.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -149,16 +140,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap\css\bootstrap.css" />
-    <Content Include="Content\bootstrap\css\bootstrap.min.css" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\bootstrap\js\bootstrap.js" />
-    <Content Include="Content\bootstrap\js\bootstrap.min.js" />
-    <Content Include="Content\dashboard.css" />
+    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-theme.css" />
+    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="Content\bootstrap\css\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap\css\bootstrap.min.css" />
+    <EmbeddedResource Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="Content\bootstrap\js\bootstrap.js" />
+    <EmbeddedResource Include="Content\bootstrap\js\bootstrap.min.js" />
+    <EmbeddedResource Include="Content\dashboard.css" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Content\scripts\lib\jquery-1.11.0.min.js" />
+    <EmbeddedResource Include="Content\scripts\lib\underscore-min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\scripts\projectviewtable.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Projects\placeholder.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

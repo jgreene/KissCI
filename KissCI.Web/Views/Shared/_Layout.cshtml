@@ -12,9 +12,9 @@
 
 
     <title>@ViewBag.Title</title>
-
-    @Url.Content("/content/bootstrap/css/bootstrap.css")
-    @Url.Content("/content/dashboard.css")
+    <link rel="stylesheet" type="text/css" href="@Url.Content("/content/bootstrap/css/bootstrap.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("/content/dashboard.css")">
+    
 </head>
 <body>
 
@@ -27,7 +27,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">JBS Autodeploy</a>
+                <a class="navbar-brand" href="#">KissCI</a>
             </div>
             @*<div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -47,7 +47,7 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    @*@{ Html.RenderAction("Categories", "Category"); }*@
+                    @Html.Partial("Shared/Categories")
                 </ul>
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -56,8 +56,9 @@
         </div>
     </div>
 
-    @*@Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)*@
+    <script type="text/javascript" src="/content/scripts/lib/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/content/scripts/lib/underscore-min.js"></script>
+    <script type="text/javascript" src="/content/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/content/scripts/projectviewtable.js"></script>
 </body>
 </html>

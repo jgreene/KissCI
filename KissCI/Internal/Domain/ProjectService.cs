@@ -22,7 +22,7 @@ namespace KissCI.Internal.Domain
         ProjectBuild GetMostRecentBuild(string projectName);
         ProjectInfo GetProjectInfo(string projectName);
         bool RunProject(string projectName, string command);
-        bool CancelProject(string projectName, string command);
+        bool CancelProject(string projectName);
         IDataContext OpenContext();
         void RegisterProject(KissProject kissProject);
         void StopProject(string projectName);
@@ -168,6 +168,7 @@ namespace KissCI.Internal.Domain
 
                     var view = new ProjectView
                     {
+                        Commands = project == null ? new string[] {} : project.Commands.Select(c=>c.Name).ToArray(),
                         Info = i,
                         LastBuild = lastBuild,
                         LastMessage = lastMessage,
@@ -276,7 +277,7 @@ namespace KissCI.Internal.Domain
             
         }
 
-        public bool CancelProject(string projectName, string command)
+        public bool CancelProject(string projectName)
         {
             using (var ctx = _dataProvider())
             {
@@ -301,7 +302,9 @@ namespace KissCI.Internal.Domain
                         ProjectInfoId = projectInfo.Id,
                         ProjectBuildId = build.Id,
                         Time = TimeHelper.Now,
-                        Message = string.Format("Canceled build for project: {0}", projectInfo.ProjectName)
+                        Message = string.Format("Canceled build for project: {0}", projectInfo.ProjectName),
+                        Type = MessageType.LogMessage,
+                        LogType = LogType.Fatal
                     });
                     
                     ctx.Commit();

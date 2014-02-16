@@ -1,0 +1,16 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<KissCI.Web.Models.Project.ProjectListView>
+
+@{
+    ViewBag.Title = "Projects";
+    Layout = "Shared/_Layout";
+}
+
+<h1 class="page-header">Projects</h1>
+
+
+@Html.Partial("Category/ProjectViewTable", Model)
+

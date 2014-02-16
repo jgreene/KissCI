@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KissCI.Tests.Projects", "KissCI.Tests.Projects\KissCI.Tests.Projects.csproj", "{60175D3D-4F44-46E8-8C56-4CBA8F6272B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KissCI.Web_old", "KissCI.Web_old\KissCI.Web_old.csproj", "{1174288D-189A-4797-9231-1801C4E1D0BC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KissCI.Web", "KissCI.Web\KissCI.Web.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
 Global
@@ -55,10 +53,6 @@ Global
 		{60175D3D-4F44-46E8-8C56-4CBA8F6272B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60175D3D-4F44-46E8-8C56-4CBA8F6272B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60175D3D-4F44-46E8-8C56-4CBA8F6272B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1174288D-189A-4797-9231-1801C4E1D0BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1174288D-189A-4797-9231-1801C4E1D0BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1174288D-189A-4797-9231-1801C4E1D0BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1174288D-189A-4797-9231-1801C4E1D0BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,9 +63,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = KissCI.vsmdi

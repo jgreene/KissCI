@@ -1,39 +1,50 @@
-﻿@model IEnumerable<KissCI.Internal.Domain.ProjectBuild>
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
 
-<table class="project-build-table table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>Log</th>
-            <th>Build Result</th>
-            <th>Build Time</th>
-            <th>Completion Time</th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var build in Model)
-        {
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<KissCI.Web.Models.Project.ProjectBuildView>
+
+<div class="table-responsive">
+    <table class="project-build-table table table-striped">
+        <thead>
             <tr>
-                <td>@Html.ActionLink("view", "Log", new { id = build.Id })</td>
-                
-                @if (build.BuildResult.HasValue)
-                {
-                    if(build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Success){
-                    <td class="text-success">@build.BuildResult.ToString()</td>
-                    }else if(build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Failure){
-                    <td class="text-error">@build.BuildResult.ToString()</td>
-                    }
-                    else if (build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Cancelled)
-                    {
-                    <td class="text-warning">@build.BuildResult.ToString()</td>
-                    }
-                }else{
-                    <td></td>
-                }
-                <td>@build.BuildTime.ToString()</td>
-                <td>@build.CompleteTime.ToString()</td>
-                
+                <th>Log</th>
+                <th>Build Result</th>
+                <th>Build Time</th>
+                <th>Completion Time</th>
+
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var build in Model.Builds)
+            {
+                <tr>
+                    <td><a href="@Url.Content("/project/" + Model.Info.ProjectName + "/log/" + build.Id.ToString())">view</a></td>
+
+                    @if (build.BuildResult.HasValue)
+                    {
+                        if (build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Success)
+                        {
+                            <td class="text-success">@build.BuildResult.ToString()</td>
+                        }
+                        else if (build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Failure)
+                        {
+                            <td class="text-danger">@build.BuildResult.ToString()</td>
+                        }
+                        else if (build.BuildResult.Value == KissCI.Internal.Domain.BuildResult.Cancelled)
+                        {
+                            <td class="text-warning">@build.BuildResult.ToString()</td>
+                        }
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@build.BuildTime.ToString()</td>
+                    <td>@build.CompleteTime.ToString()</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
