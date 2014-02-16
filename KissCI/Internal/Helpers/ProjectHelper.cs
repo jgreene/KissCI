@@ -70,7 +70,7 @@ namespace KissCI.Internal.Helpers
 
             try
             {
-                command.Tasks.Binder(context, new BuildTaskStart());
+                command.Tasks.Binder(context, new KissCITaskStart());
 
                 setBuildStatus(BuildResult.Success);
             }

@@ -34,24 +34,24 @@ namespace KissCI.Helpers
             });
         }
 
-        public static KissTask<BuildTaskStart, BuildTaskStart> Start()
+        public static KissTask<KissCITaskStart, KissCITaskStart> Start()
         {
-            return new KissTask<BuildTaskStart, BuildTaskStart>(0, "Task Start", (ctx, arg) =>
+            return new KissTask<KissCITaskStart, KissCITaskStart>(0, "Task Start", (ctx, arg) =>
             {
-                return new BuildTaskStart();
+                return new KissCITaskStart();
             });
         }
 
-        public static KissTask<BuildTaskStart, BuildTaskEnd> Finalize<TResult>(this KissTask<BuildTaskStart, TResult> t)
+        public static KissTask<KissCITaskStart, KissCITaskEnd> Finalize<TResult>(this KissTask<KissCITaskStart, TResult> t)
         {
             return t.AddStep((ctx, arg) =>
             {
                 ctx.LogMessage("Ending tasks for {0} successfully", ctx.ProjectName);
-                return new BuildTaskEnd();
+                return new KissCITaskEnd();
             });
         }
 
-        public static KissTask<BuildTaskStart, BuildTaskEnd> Create<TResult>(Func<KissTask<BuildTaskStart, BuildTaskStart>, KissTask<BuildTaskStart, TResult>> act)
+        public static KissTask<KissCITaskStart, KissCITaskEnd> Create<TResult>(Func<KissTask<KissCITaskStart, KissCITaskStart>, KissTask<KissCITaskStart, TResult>> act)
         {
             return act(Start()).Finalize();
         }

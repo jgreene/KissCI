@@ -9,7 +9,7 @@
     Layout = "Shared/_Layout";
 }
 
-<h1 class="page-header">Projects</h1>
+<h1 class="page-header">@(string.IsNullOrEmpty(Model.CategoryName) ? "All Projects" : Model.CategoryName)</h1>
 
 
 @Html.Partial("Category/ProjectViewTable", Model)

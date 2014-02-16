@@ -11,10 +11,10 @@ namespace KissCI
     public class KissCommand
     {
         readonly string _name;
-        readonly KissTask<BuildTaskStart, BuildTaskEnd> _tasks;
+        readonly KissTask<KissCITaskStart, KissCITaskEnd> _tasks;
         readonly ITrigger[] _triggers;
 
-        public KissCommand(string name, KissTask<BuildTaskStart, BuildTaskEnd> tasks, params ITrigger[] triggers)
+        public KissCommand(string name, KissTask<KissCITaskStart, KissCITaskEnd> tasks, params ITrigger[] triggers)
         {
             if(string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
@@ -29,7 +29,7 @@ namespace KissCI
 
         public string Name { get { return _name; } }
 
-        public KissTask<BuildTaskStart, BuildTaskEnd> Tasks { get { return _tasks; } }
+        public KissTask<KissCITaskStart, KissCITaskEnd> Tasks { get { return _tasks; } }
 
         public ITrigger[] Triggers { get { return _triggers; } }
     }

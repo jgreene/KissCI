@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace KissCI
 {
-    public class BuildTaskStart { }
-    public class BuildTaskEnd { }
+    public class KissCITaskStart { }
+    public class KissCITaskEnd { }
 
     public class TaskContext
     {

@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ProjectException.cs" />
     <Compile Include="Helpers\CollectionHelpers.cs" />
+    <Compile Include="Internal\IHideObjectMembers.cs" />
     <Compile Include="Internal\Logging\KissCILoggingAdapter.cs" />
     <Compile Include="KissCommand.cs" />
     <Compile Include="KissTask.cs" />
