@@ -36,7 +36,7 @@ namespace KissCI
         readonly KissCommand[] _commands;
         public KissCommand[] Commands { get { return _commands; } }
 
-        public static implicit operator KissProject(ProjectBuilder builder)
+        public static implicit operator KissProject(KissProjectBuilder builder)
         {
             return ProjectProviderExtensions.ToKissProject(builder);
         }

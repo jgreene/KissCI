@@ -15,12 +15,12 @@ namespace KissCI
         IEnumerable<KissProject> Projects();
     }
 
-    public abstract class ProjectBuilder : IHideObjectMembers { }
+    public abstract class KissProjectBuilder : IHideObjectMembers { }
 
     public static class ProjectProviderExtensions
     {
 
-        class KissProjectBuilder : ProjectBuilder
+        class InternalKissProjectBuilder : KissProjectBuilder
         {
             public string ProjectName { get; set; }
             public string Category { get; set; }
@@ -30,7 +30,7 @@ namespace KissCI
             public List<KissCommand> Commands { get { return _commands; } }
         }
 
-        public static ProjectBuilder CreateProject(this IProjectProvider provider, string projectName, string category)
+        public static KissProjectBuilder CreateProject(this IProjectProvider provider, string projectName, string category)
         {
             if(string.IsNullOrEmpty(projectName))
                 throw new ArgumentNullException("projectName");
@@ -38,11 +38,11 @@ namespace KissCI
             if(string.IsNullOrEmpty(category))
                 throw new ArgumentNullException("category");
 
-            return new KissProjectBuilder { ProjectName = projectName, Category = category };
+            return new InternalKissProjectBuilder { ProjectName = projectName, Category = category };
         }
 
-        public static ProjectBuilder WithCommand<TResult>(
-            this ProjectBuilder projectBuilder, 
+        public static KissProjectBuilder WithCommand<TResult>(
+            this KissProjectBuilder projectBuilder, 
             string commandName,
             Func<KissTask<KissCITaskStart, KissCITaskStart>, KissTask<KissCITaskStart, TResult>> act,
             params ITrigger[] triggers
@@ -50,15 +50,15 @@ namespace KissCI
         {
             var tasks = act(TaskHelper.Start()).Finalize();
 
-            var kissBuilder = (KissProjectBuilder)projectBuilder;
+            var kissBuilder = (InternalKissProjectBuilder)projectBuilder;
             kissBuilder.Commands.Add(new KissCommand(commandName, tasks, triggers));
             
             return kissBuilder;
         }
 
-        public static KissProject ToKissProject(ProjectBuilder projectBuilder)
+        public static KissProject ToKissProject(KissProjectBuilder projectBuilder)
         {
-            var kissBuilder = (KissProjectBuilder)projectBuilder;
+            var kissBuilder = (InternalKissProjectBuilder)projectBuilder;
 
             return new KissProject(kissBuilder.ProjectName, kissBuilder.Category, kissBuilder.Commands.ToArray());
         }
