@@ -9,14 +9,14 @@
     <table class="project-view-table table table-striped" data-category="@Model.CategoryName">
         <thead>
             <tr>
-                <th></th>
-                <th>Project Name</th>
-                <th>Last Build Status</th>
-                <th>Last Build Time</th>
-                <th>Next Build Time</th>
-                <th>Status</th>
-                <th>Activity</th>
-                <th>Messages</th>
+                <th class="col-sm-4"></th>
+                <th class="col-sm-1">Project Name</th>
+                <th class="col-sm-1">Last Build Status</th>
+                <th class="col-sm-1">Last Build Time</th>
+                <th class="col-sm-1">Next Build Time</th>
+                <th class="col-sm-1">Status</th>
+                <th class="col-sm-1">Activity</th>
+                <th class="col-sm-3">Messages</th>
             </tr>
         </thead>
         <tbody>
@@ -50,22 +50,22 @@
                         {
                             foreach (var command in project.Commands)
                             {
-                                <a class="command-button" href="#" data-command-name="@command">@command</a><br />
+                                <button class="command-button btn btn-sm btn-primary btn-block" href="#" data-command-name="@command">@command</button>
                             }
                         }
 
                         @if (showCancel(project))
                         {
-                            <a class="cancel-button" href="#">cancel</a><br />
+                            <button class="cancel-button btn btn-sm btn-info btn-block" href="#">cancel</button>
                         }
 
-                        @if (showStop(project))
+                                                @if (showStop(project))
                         {
-                            <a class="stop-button" href="#">stop</a>
+                            <button class="stop-button btn btn-sm btn-info btn-block" href="#">stop</button>
                         }
                         else if (project.Info.Status == KissCI.Internal.Domain.Status.Stopped)
                         {
-                            <a class="start-button" href="#">start</a>
+                            <button class="start-button btn btn-sm btn-info btn-block" href="#">start</button>
                         }
 
                     </td>

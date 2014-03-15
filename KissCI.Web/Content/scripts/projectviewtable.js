@@ -31,6 +31,9 @@
                 e.preventDefault();
                 var projectName = $(this).parents('.project-row').data('project-name');
 
+                if (!confirm("Are you sure you want to execute " + name + " for " + projectName + "?"))
+                    return;
+
                 $.post('/project/' + projectName + '/' + name, function (data) {
                     refreshGrid();
                 });
@@ -42,8 +45,12 @@
         var container = $('.project-view-table-container');
         container.on('click', '.command-button', function (e) {
             e.preventDefault();
+            
             var projectName = $(this).parents('.project-row').data('project-name');
             var commandName = $(this).data('command-name');
+
+            if (!confirm("Are you sure you want to execute " + commandName + " for " + projectName + "?"))
+                return;
 
             $.post('/project/' + projectName + '/run/' + commandName, function(data) {
                 refreshGrid();
